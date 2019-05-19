@@ -1,0 +1,23 @@
+<dataset>
+    <task
+            id="1"
+            name="task 1"
+            context="Personal"
+            importance="NOT_SO_IMPORTANT"
+            status="OPEN"
+    />
+    <task
+            id="2"
+            name="task 2"
+            context="Personal"
+            importance="NOT_SO_IMPORTANT"
+            status="CLOSED"
+    />
+    <task
+            id="3"
+            name="task 3"
+            context="Work"
+            importance="I_DO_NOT_REALLY_CARE"
+            status="OPEN"
+    />
+</dataset>

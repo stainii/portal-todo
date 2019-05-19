@@ -1,0 +1,141 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_table_task
+      author: Stijn Hooft
+      changes:
+        - createTable:
+            tableName: task
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date_time
+                  type: timestamp
+              - column:
+                  name: due_date_time
+                  type: timestamp
+              - column:
+                  name: expected_duration
+                  type: bigint
+              - column:
+                  name: context
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: importance
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(10000)
+              - column:
+                  name: main_task_id
+                  type: bigint
+
+        - addForeignKeyConstraint:
+            constraintName: fk_sub_task_main_task
+            baseTableName: task
+            baseColumnNames: main_task_id
+            referencedTableName: task
+            referencedColumnNames: id
+
+        - createSequence:
+            incrementBy: 50
+            sequenceName: task_id_sequence
+
+  - changeSet:
+      id: create_tables_task_template_and_task_template_variable_name
+      author: Stijn Hooft
+      changes:
+        - createTable:
+            tableName: task_template
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deviation_of_the_main_task_start_date_time
+                  type: bigint
+              - column:
+                  name: deviation_of_the_main_task_due_date_time
+                  type: bigint
+              - column:
+                  name: expected_duration
+                  type: bigint
+              - column:
+                  name: context
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: importance
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(10000)
+              - column:
+                  name: main_task_template_id
+                  type: bigint
+
+        - addForeignKeyConstraint:
+            constraintName: fk_sub_task_template_main_task_template
+            baseTableName: task_template
+            baseColumnNames: main_task_template_id
+            referencedTableName: task_template
+            referencedColumnNames: id
+
+        - createSequence:
+            incrementBy: 50
+            sequenceName: task_template_id_sequence
+
+        - createTable:
+            tableName: task_template_variable_name
+            columns:
+              - column:
+                  name: task_template_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: variable_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            constraintName: pk_task_template_variable_name
+            tableName: task_template_variable_name
+            columnNames: task_template_id, variable_name
+
+        - addForeignKeyConstraint:
+            constraintName: fk_task_template_variable_name_task_template_id
+            baseTableName: task_template_variable_name
+            baseColumnNames: task_template_id
+            referencedTableName: task_template
+            referencedColumnNames: id
