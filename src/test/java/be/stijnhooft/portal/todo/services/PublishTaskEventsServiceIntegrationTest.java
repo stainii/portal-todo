@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 /** This is an integration test, firing internal events
  * and checking whether the correct external events are published **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = "spring.main.web-application-type=reactive")
+@SpringBootTest
 @ActiveProfiles("local")
 public class PublishTaskEventsServiceIntegrationTest {
 
