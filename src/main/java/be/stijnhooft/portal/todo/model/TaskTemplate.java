@@ -1,8 +1,9 @@
 package be.stijnhooft.portal.todo.model;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,7 @@ import java.util.List;
  * and the due date of the main task, from which deviations for sub tasks' due dates can be calculated.
  *
  */
-@Entity
-@SequenceGenerator( name = "taskIdGenerator",
-        sequenceName = "task_id_sequence")
-@Table(name = "task_template")
+@Document
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,8 +26,7 @@ import java.util.List;
 public class TaskTemplate {
 
     @Id
-    @GeneratedValue(generator = "taskIdGenerator")
-    private Long id;
+    private String id;
 
     /**
      * Can contain variable names. The variable names need to be defined in attribute {@link #variableNames}.
@@ -49,7 +46,6 @@ public class TaskTemplate {
      *
      * If null, no start date will be set for the resulting task.
      */
-    @Column(name = "deviation_of_the_main_task_start_date_time")
     private Duration deviationOfTheMainTaskStartDateTime;
 
     /**
@@ -62,23 +58,18 @@ public class TaskTemplate {
      *
      * If null, no due date will be set for the resulting task.
      */
-    @Column(name = "deviation_of_the_main_task_due_date_time")
     private Duration deviationOfTheMainTaskDueDateTime;
 
-    @Column(name = "expected_duration")
     private Duration expectedDuration;
 
     @NonNull
     private String context;
 
     @NonNull
-    @Enumerated(EnumType.STRING)
     private Importance importance;
 
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "main_task_template_id")
     private List<TaskTemplate> subTaskTemplates = new ArrayList<>();
 
     /**
@@ -87,12 +78,6 @@ public class TaskTemplate {
      * @see #context
      * @see #description
      */
-    @ElementCollection
-    @CollectionTable(
-            name="task_template_variable_name",
-            joinColumns=@JoinColumn(name="task_template_id")
-    )
-    @Column(name="variable_name")
     private List<String> variableNames = new ArrayList<>();
 
 }

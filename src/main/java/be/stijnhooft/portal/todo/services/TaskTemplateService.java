@@ -7,9 +7,11 @@ import be.stijnhooft.portal.todo.model.TaskTemplate;
 import be.stijnhooft.portal.todo.repositories.TaskTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,10 +24,12 @@ import static be.stijnhooft.portal.todo.utils.StringUtils.fillInVariables;
 public class TaskTemplateService {
 
     private final TaskTemplateRepository repository;
+    private final Clock clock;
 
     @Autowired
-    public TaskTemplateService(TaskTemplateRepository repository) {
+    public TaskTemplateService(TaskTemplateRepository repository, Clock clock) {
         this.repository = repository;
+        this.clock = clock;
     }
 
     public Task toTask(TaskTemplateEntry taskTemplateEntry) {
@@ -40,20 +44,14 @@ public class TaskTemplateService {
     }
 
     public TaskTemplate create(TaskTemplate taskTemplate) {
-        return repository.saveAndFlush(taskTemplate);
+        return repository.save(taskTemplate);
     }
 
     public TaskTemplate update(TaskTemplate taskTemplate) {
-        repository.findById(taskTemplate.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Task template with id " + taskTemplate.getId() + " cannot be updated because it does not exist in the database."));
-
-        return repository.saveAndFlush(taskTemplate);
+        return repository.save(taskTemplate);
     }
 
-    public void delete(Long id) {
-        repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Task template with id " + id + " cannot be deleted because it does not exist in the database."));
-
+    public void delete(String id) {
         repository.deleteById(id);
     }
 
@@ -84,7 +82,8 @@ public class TaskTemplateService {
                 .collect(Collectors.toList());
 
         // assemble task
-        return new Task(null, name, startDateTime, dueDateTime, expectedDurationInHours, context, urgency,
-                description, subTasks, TaskStatus.OPEN);
+        return new Task(null, name, LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault()),
+                startDateTime, dueDateTime, expectedDurationInHours, context, urgency,
+                description, subTasks, TaskStatus.OPEN, null);
     }
 }

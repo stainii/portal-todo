@@ -18,23 +18,13 @@ public class TaskStatusTest {
     }
 
     @Test
-    public void parseWhenClosedCorrectCase() {
-        assertThat(TaskStatus.parse("CLOSED"), is(TaskStatus.CLOSED));
+    public void parseWhenCompletedCorrectCase() {
+        assertThat(TaskStatus.parse("COMPLETED"), is(TaskStatus.COMPLETED));
     }
 
     @Test
-    public void parseWhenClosedIncorrectCase() {
-        assertThat(TaskStatus.parse("Closed"), is(TaskStatus.CLOSED));
-    }
-
-    @Test
-    public void parseWhenDeferredCorrectCase() {
-        assertThat(TaskStatus.parse("DEFERRED"), is(TaskStatus.DEFERRED));
-    }
-
-    @Test
-    public void parseWhenDeferredIncorrectCase() {
-        assertThat(TaskStatus.parse("DeFeRrEd"), is(TaskStatus.DEFERRED));
+    public void parseWhenCompletedIncorrectCase() {
+        assertThat(TaskStatus.parse("Completed"), is(TaskStatus.COMPLETED));
     }
 
     @Test(expected = IllegalArgumentException.class)

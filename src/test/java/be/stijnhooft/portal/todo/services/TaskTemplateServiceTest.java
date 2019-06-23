@@ -4,14 +4,16 @@ import be.stijnhooft.portal.todo.dtos.TaskTemplateEntry;
 import be.stijnhooft.portal.todo.model.Importance;
 import be.stijnhooft.portal.todo.model.Task;
 import be.stijnhooft.portal.todo.model.TaskTemplate;
+import be.stijnhooft.portal.todo.repositories.TaskTemplateRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,12 +22,20 @@ import java.util.Map;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class TaskTemplateServiceTest {
 
-    @Autowired
+    @Mock
+    private TaskTemplateRepository taskTemplateRepository;
+
+    private Clock clock = Clock.fixed(ZonedDateTime.of(2019, 10, 10, 10, 10, 10, 10, ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+
     private TaskTemplateService taskTemplateService;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+        taskTemplateService = new TaskTemplateService(taskTemplateRepository, clock);
+    }
 
     @Test
     public void toTask() {

@@ -1,16 +1,18 @@
 package be.stijnhooft.portal.todo.model;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-@Entity
-@SequenceGenerator(name = "taskIdGenerator",
-        sequenceName = "task_id_sequence")
+@Document
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,44 +20,79 @@ import java.util.List;
 public class Task {
 
     @Id
-    @GeneratedValue(generator = "taskIdGenerator")
-    private Long id;
+    private String id;
 
     @NonNull
-    @Column(nullable = false)
     private String name;
+
+    @NonNull
+    private LocalDateTime creationDateTime;
 
     /**
      * Optional date time, which indicates when a task becomes relevant to pick up.
      * Before this date time, the task should not be shown to the user.
      **/
-    @Column(name = "start_date_time")
     private LocalDateTime startDateTime;
 
-    @Column(name = "due_date_time")
     private LocalDateTime dueDateTime;
 
-    @Column(name = "expected_duration")
     private Duration expectedDuration;
 
     @NonNull
-    @Column(nullable = false)
     private String context;
 
-    @Enumerated(EnumType.STRING)
     @NonNull
-    @Column(nullable = false)
     private Importance importance;
 
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "main_task_id")
     private List<Task> subTasks = new ArrayList<>();
 
     @NonNull
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
+    @Setter(AccessLevel.PRIVATE)
+    @DBRef
+    private List<TaskPatch> history = new ArrayList<>();
+
+    public TaskPatchResult patch(TaskPatch taskPatch) {
+        TaskStatus statusBeforePatch = this.getStatus();
+        LocalDateTime dueDateTimeBeforePatch = this.getDueDateTime();
+
+        // apply patch
+        patchIfNeeded(taskPatch, "name", newValue -> this.setName(newValue));
+        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
+        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
+        patchIfNeeded(taskPatch, "expectedDuration", newValue -> this.setExpectedDuration(newValue == null ? null : Duration.parse(newValue)));
+        patchIfNeeded(taskPatch, "context", newValue -> this.setContext(newValue));
+        patchIfNeeded(taskPatch, "importance", newValue -> this.setImportance(newValue == null ? null : Importance.valueOf(newValue)));
+        patchIfNeeded(taskPatch, "description", newValue -> this.setDescription(newValue));
+        patchIfNeeded(taskPatch, "status", newValue -> this.setStatus(newValue == null ? null : TaskStatus.valueOf(newValue)));
+
+        // reapply newer patches
+        history.stream()
+                .filter(otherUpdate -> otherUpdate.getDate().isAfter(taskPatch.getDate()))
+                .findFirst()
+                .ifPresent(this::patch);
+
+        // add patch to history
+        history.add(taskPatch);
+
+        // create a response summarizing details of what has changed
+        return TaskPatchResult.builder()
+                .task(this)
+                .taskPatch(taskPatch)
+                .hasBeenCompleted(statusBeforePatch != TaskStatus.COMPLETED
+                                    && this.getStatus() == TaskStatus.COMPLETED)
+                .hasBeenUncompleted(statusBeforePatch == TaskStatus.COMPLETED
+                                    && this.getStatus() != TaskStatus.COMPLETED)
+                .hasBeenRescheduled(!Objects.equals(dueDateTimeBeforePatch, this.getDueDateTime()))
+                .build();
+    }
+
+    private void patchIfNeeded(TaskPatch taskPatch, String field, Consumer<String> action) {
+        if (taskPatch.containsChange(field)) {
+            action.accept(taskPatch.getChange(field));
+        }
+    }
 }

@@ -5,8 +5,8 @@ import java.util.Arrays;
 public enum TaskStatus {
 
     OPEN,
-    DEFERRED,
-    CLOSED;
+    COMPLETED,
+    CANCELLED;
 
     public static TaskStatus parse(Object object) {
         final String stringToSearchFor = object.toString();

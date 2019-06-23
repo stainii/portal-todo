@@ -1,65 +1,73 @@
 package be.stijnhooft.portal.todo.services;
 
 import be.stijnhooft.portal.todo.dtos.TaskTemplateEntry;
+import be.stijnhooft.portal.todo.mappers.TaskPatchMapper;
+import be.stijnhooft.portal.todo.messaging.EventPublisher;
 import be.stijnhooft.portal.todo.model.Task;
+import be.stijnhooft.portal.todo.model.TaskPatch;
 import be.stijnhooft.portal.todo.model.TaskStatus;
+import be.stijnhooft.portal.todo.repositories.TaskPatchRepository;
 import be.stijnhooft.portal.todo.repositories.TaskRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.Collections;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
-
-import static org.springframework.util.CollectionUtils.isEmpty;
+import java.util.Optional;
 
 @Service
 @Slf4j
 @Transactional
 public class TaskService {
 
-    private final TaskRepository repository;
+    private final TaskRepository taskRepository;
+    private final TaskPatchRepository taskPatchRepository;
     private final TaskTemplateService taskTemplateService;
+    private final EventPublisher eventPublisher;
+    private final TaskPatchMapper taskPatchMapper;
+    private final Clock clock;
 
     @Autowired
-    public TaskService(TaskRepository repository, TaskTemplateService taskTemplateService) {
-        this.repository = repository;
+    public TaskService(TaskRepository taskRepository, TaskPatchRepository taskPatchRepository, TaskTemplateService taskTemplateService, EventPublisher eventPublisher, TaskPatchMapper taskPatchMapper, Clock clock) {
+        this.taskRepository = taskRepository;
+        this.taskPatchRepository = taskPatchRepository;
         this.taskTemplateService = taskTemplateService;
+        this.eventPublisher = eventPublisher;
+        this.taskPatchMapper = taskPatchMapper;
+        this.clock = clock;
     }
 
-    public List<Task> findAllWithStatus(@NonNull TaskStatus status) {
-        return this.findAllWithStatus(Collections.singletonList(status));
+    public List<Task> findAllActiveTasks() {
+        LocalDateTime now = LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault());
+        return taskRepository.findByStartDateTimeGreaterThanAndStatus(now, TaskStatus.OPEN);
     }
 
-    public List<Task> findAllWithStatus(@NonNull List<TaskStatus> statuses) {
-        if (isEmpty(statuses)) {
-            log.warn("Using TaskService.findAllWithStatus with an empty array of statuses to look for.");
-        }
-        return repository.findAllByStatusIn(statuses);
+    public Optional<Task> findById(@NonNull String id) {
+        return taskRepository.findById(id);
     }
 
-    public Task create(Task task) {
-        return repository.saveAndFlush(task);
+    public Task create(@NonNull Task task) {
+        taskRepository.save(task);
+
+        TaskPatch createPatch = taskPatchMapper.from(task);
+        eventPublisher.publishTaskCreated(createPatch);
+
+        return task;
     }
 
-    public Task create(TaskTemplateEntry taskTemplateEntry) {
+    public Task createTasksBasedOn(@NonNull TaskTemplateEntry taskTemplateEntry) {
         Task task = taskTemplateService.toTask(taskTemplateEntry);
-        return repository.saveAndFlush(task);
+        return create(task);
     }
 
-    public Task update(Task task) {
-        repository.findById(task.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Task with id " + task.getId() + " cannot be updated because it does not exist in the database."));
-
-        return repository.saveAndFlush(task);
+    public Task save(@NonNull Task task) {
+        taskPatchRepository.saveAll(task.getHistory());
+        return taskRepository.save(task);
     }
 
-    public void delete(Long id) {
-        repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Task with id " + id + " cannot be deleted because it does not exist in the database."));
-
-        repository.deleteById(id);
-    }
 }

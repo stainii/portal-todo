@@ -2,59 +2,62 @@ package be.stijnhooft.portal.todo.controllers;
 
 import be.stijnhooft.portal.todo.dtos.TaskTemplateEntry;
 import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskStatus;
+import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.TaskPatchResult;
+import be.stijnhooft.portal.todo.services.TaskPatchService;
 import be.stijnhooft.portal.todo.services.TaskService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/task/")
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskPatchService taskPatchService;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, TaskPatchService taskPatchService) {
         this.taskService = taskService;
+        this.taskPatchService = taskPatchService;
     }
 
-    @RequestMapping(method = GET, value = "/")
-    public List<Task> findAllWithStatus(@RequestParam(required = false, defaultValue = "open") List<String> statuses) {
-        List<TaskStatus> parsedTaskStatuses =
-                statuses.stream()
-                        .map(TaskStatus::parse)
-                        .collect(Collectors.toList());
-        return taskService.findAllWithStatus(parsedTaskStatuses);
+    @GetMapping
+    public List<Task> getAllActiveTasks() {
+        return taskService.findAllActiveTasks();
     }
 
-    @RequestMapping(method = POST, value = "/from-template/")
-    public Task createFromTemplate(@RequestBody TaskTemplateEntry taskTemplateEntry) {
-        return taskService.create(taskTemplateEntry);
-    }
 
-    @RequestMapping(method = POST, value = "/")
+    @PostMapping
     public Task create(@RequestBody Task task) {
         return taskService.create(task);
     }
 
-    @RequestMapping(method = PUT, value = "/:id")
-    public Task update(@RequestBody Task task, @RequestParam("id") Long id) {
-        if (!id.equals(task.getId())) {
-            throw new IllegalArgumentException("The id in the url is not the same as the id in the payload.");
-        }
-        return taskService.update(task);
+    @PostMapping("/from-template/")
+    public Task createFromTemplate(@RequestBody TaskTemplateEntry taskTemplateEntry) {
+        return taskService.createTasksBasedOn(taskTemplateEntry);
     }
 
-    @RequestMapping(method = DELETE, value = "/:id")
-    public void delete(@RequestParam("id") Long id) {
-        taskService.delete(id);
+    /**
+     * Why patch, and not update/put?
+     *
+     * We expect the client to work offline often. When it comes online, the client will send out its updates.
+     * Now, when multiple clients update the same task, the last sent change will be applied.
+     * To limit possible data loss, it is important to only update the necessary fields.
+     *
+     * For example:
+     * client A updates the status
+     * client B updates the description
+     *
+     * Expected result: both the status and the description is updated.
+     * This is only possible when the client only sends out the changed field, instead of the whole object.
+     *
+     * So, clients are expected to only patch the changed fields.
+     */
+    @PatchMapping("/{id}")
+    public TaskPatchResult patch(@RequestBody TaskPatch taskPatch, @PathVariable("id") String id) {
+        taskPatch.setTaskId(id);
+        return taskPatchService.patch(taskPatch);
     }
 
 }
