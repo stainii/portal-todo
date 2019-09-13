@@ -44,7 +44,7 @@ public class TaskService {
 
     public List<Task> findAllActiveTasks() {
         LocalDateTime now = LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault());
-        return taskRepository.findByStartDateTimeGreaterThanAndStatus(now, TaskStatus.OPEN);
+        return taskRepository.findByStartDateTimeLessThanAndStatus(now, TaskStatus.OPEN);
     }
 
     public Optional<Task> findById(@NonNull String id) {

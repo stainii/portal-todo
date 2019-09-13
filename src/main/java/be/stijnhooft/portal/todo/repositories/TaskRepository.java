@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends MongoRepository<Task, String> {
 
-    List<Task> findByStartDateTimeGreaterThanAndStatus(LocalDateTime startDateTime, TaskStatus status);
+    List<Task> findByStartDateTimeLessThanAndStatus(LocalDateTime startDateTime, TaskStatus status);
 
 }
