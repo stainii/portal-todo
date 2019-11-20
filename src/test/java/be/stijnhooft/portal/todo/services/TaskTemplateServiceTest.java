@@ -7,11 +7,8 @@ import be.stijnhooft.portal.todo.model.TaskTemplate;
 import be.stijnhooft.portal.todo.repositories.TaskTemplateRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -44,7 +41,7 @@ public class TaskTemplateServiceTest {
         mainTaskTemplate.setName("Arrange workshop about ${subject} for ${school}");
         mainTaskTemplate.setDeviationOfTheMainTaskStartDateTime(Duration.ZERO);
         mainTaskTemplate.setDeviationOfTheMainTaskDueDateTime(Duration.ZERO);
-        mainTaskTemplate.setExpectedDuration(Duration.of(1, ChronoUnit.HOURS));
+        mainTaskTemplate.setExpectedDurationInHours(1);
         mainTaskTemplate.setContext("School coordination");
         mainTaskTemplate.setImportance(Importance.VERY_IMPORTANT);
         mainTaskTemplate.setDescription("${school} has asked for a workshop about ${subject}. Possible speakers: ${speakers}.");
@@ -82,7 +79,7 @@ public class TaskTemplateServiceTest {
         assertThat(mainTask.getName(), is("Arrange workshop about Git for Hogeschool Gent"));
         assertThat(mainTask.getStartDateTime(), is(nullValue()));
         assertThat(mainTask.getDueDateTime(), is(dueDateTimeOfMainTask));
-        assertThat(mainTask.getExpectedDuration(), is(Duration.of(1, ChronoUnit.HOURS)));
+        assertThat(mainTask.getExpectedDurationInHours(), is(1));
         assertThat(mainTask.getContext(), is("School coordination"));
         assertThat(mainTask.getImportance(), is(Importance.VERY_IMPORTANT));
         assertThat(mainTask.getDescription(), is("Hogeschool Gent has asked for a workshop about Git. Possible speakers: Reinout Claeys, Gert Keldermans."));
@@ -92,7 +89,7 @@ public class TaskTemplateServiceTest {
         assertThat(subTask1.getName(), is("Ask speaker for a workshop about Git at Hogeschool Gent"));
         assertThat(subTask1.getStartDateTime(), is(nullValue()));
         assertThat(subTask1.getDueDateTime(), is(LocalDateTime.of(2019, 4, 26, 12, 0)));
-        assertThat(subTask1.getExpectedDuration(), is(nullValue()));
+        assertThat(subTask1.getExpectedDurationInHours(), is(nullValue()));
         assertThat(subTask1.getContext(), is("School coordination"));
         assertThat(subTask1.getImportance(), is(Importance.VERY_IMPORTANT));
         assertThat(subTask1.getDescription(), is(nullValue()));
@@ -102,7 +99,7 @@ public class TaskTemplateServiceTest {
         assertThat(subTask2.getName(), is("Ask speakers to pick up goodies"));
         assertThat(subTask2.getStartDateTime(), is(nullValue()));
         assertThat(subTask2.getDueDateTime(), is(nullValue()));
-        assertThat(subTask2.getExpectedDuration(), is(nullValue()));
+        assertThat(subTask2.getExpectedDurationInHours(), is(nullValue()));
         assertThat(subTask2.getContext(), is("School coordination"));
         assertThat(subTask2.getImportance(), is(Importance.NOT_SO_IMPORTANT));
         assertThat(subTask2.getDescription(), is(nullValue()));

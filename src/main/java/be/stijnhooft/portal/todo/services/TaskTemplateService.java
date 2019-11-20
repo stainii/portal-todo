@@ -72,7 +72,7 @@ public class TaskTemplateService {
                 .orElse(null);
 
         // other variables
-        var expectedDurationInHours = taskTemplate.getExpectedDuration();
+        var expectedDurationInHours = taskTemplate.getExpectedDurationInHours();
         var urgency = taskTemplate.getImportance();
 
         // do the same for sub tasks

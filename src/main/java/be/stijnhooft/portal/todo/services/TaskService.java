@@ -52,9 +52,18 @@ public class TaskService {
     }
 
     public Task create(@NonNull Task task) {
+        if (task.getStatus() == null) {
+            task.setStatus(TaskStatus.OPEN);
+        }
+
+        if (task.getStartDateTime() == null) {
+            task.setStartDateTime(clock.instant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+        }
+
         taskRepository.save(task);
 
         TaskPatch createPatch = taskPatchMapper.from(task);
+        taskPatchRepository.save(createPatch);
         eventPublisher.publishTaskCreated(createPatch);
 
         return task;

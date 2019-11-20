@@ -2,12 +2,11 @@ package be.stijnhooft.portal.todo.model;
 
 import org.junit.Test;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class TaskTest {
 
@@ -21,7 +20,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -32,7 +31,7 @@ public class TaskTest {
         assertThat(task.getStatus(), is(TaskStatus.OPEN));
         assertThat(task.getDescription(), is("original"));
         assertThat(task.getContext(), is("original"));
-        assertThat(task.getExpectedDuration(), is(Duration.ofSeconds(10)));
+        assertThat(task.getExpectedDurationInHours(), is(10));
         assertThat(task.getStartDateTime(), is(LocalDateTime.of(2019, 1, 1, 1, 1)));
         assertThat(task.getDueDateTime(), is(LocalDateTime.of(2019, 1, 1, 1, 1)));
         assertThat(task.getImportance(), is(Importance.I_DO_NOT_REALLY_CARE));
@@ -46,7 +45,7 @@ public class TaskTest {
         taskPatch.addChange("status", "COMPLETED");
         taskPatch.addChange("description", "new");
         taskPatch.addChange("context", "new");
-        taskPatch.addChange("expectedDuration", "PT1h");
+        taskPatch.addChange("expectedDurationInHours", "1");
         taskPatch.addChange("startDateTime", "2019-02-02T02:02:02");
         taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02");
         taskPatch.addChange("importance", "VERY_IMPORTANT");
@@ -56,7 +55,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -67,7 +66,7 @@ public class TaskTest {
         assertThat(task.getStatus(), is(TaskStatus.COMPLETED));
         assertThat(task.getDescription(), is("new"));
         assertThat(task.getContext(), is("new"));
-        assertThat(task.getExpectedDuration(), is(Duration.ofHours(1)));
+        assertThat(task.getExpectedDurationInHours(), is(1));
         assertThat(task.getStartDateTime(), is(LocalDateTime.of(2019, 2, 2,  2, 2, 2)));
         assertThat(task.getDueDateTime(), is(LocalDateTime.of(2019, 2, 2, 2, 2, 2)));
         assertThat(task.getImportance(), is(Importance.VERY_IMPORTANT));
@@ -87,7 +86,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -98,7 +97,7 @@ public class TaskTest {
         assertThat(task.getStatus(), is(TaskStatus.COMPLETED));
         assertThat(task.getDescription(), is("new"));
         assertThat(task.getContext(), is("original"));
-        assertThat(task.getExpectedDuration(), is(Duration.ofSeconds(10)));
+        assertThat(task.getExpectedDurationInHours(), is(10));
         assertThat(task.getStartDateTime(), is(LocalDateTime.of(2019, 1, 1, 1, 1)));
         assertThat(task.getDueDateTime(), is(LocalDateTime.of(2019, 1, 1, 1, 1)));
         assertThat(task.getImportance(), is(Importance.VERY_IMPORTANT));
@@ -128,7 +127,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -146,7 +145,7 @@ public class TaskTest {
         assertThat(task.getStatus(), is(TaskStatus.OPEN)); // not patched
         assertThat(task.getDescription(), is("2019")); // patch 3
         assertThat(task.getContext(), is("2017")); // patch 1
-        assertThat(task.getExpectedDuration(), is(Duration.ofSeconds(10))); // not patched
+        assertThat(task.getExpectedDurationInHours(), is(10)); // not patched
         assertThat(task.getStartDateTime(), is(LocalDateTime.of(2019, 1, 1, 1, 1))); // not patched
         assertThat(task.getDueDateTime(), is(LocalDateTime.of(2019, 1, 1, 1, 1))); // not patched
         assertThat(task.getImportance(), is(Importance.VERY_IMPORTANT)); // patch 2
@@ -176,7 +175,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -194,7 +193,7 @@ public class TaskTest {
         assertThat(task.getStatus(), is(TaskStatus.OPEN)); // not patched
         assertThat(task.getDescription(), is("2019")); // patch 3
         assertThat(task.getContext(), is("2017")); // patch 1
-        assertThat(task.getExpectedDuration(), is(Duration.ofSeconds(10))); // not patched
+        assertThat(task.getExpectedDurationInHours(), is(10)); // not patched
         assertThat(task.getStartDateTime(), is(LocalDateTime.of(2019, 1, 1, 1, 1))); // not patched
         assertThat(task.getDueDateTime(), is(LocalDateTime.of(2019, 1, 1, 1, 1))); // not patched
         assertThat(task.getImportance(), is(Importance.VERY_IMPORTANT)); // patch 2
@@ -211,7 +210,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -235,7 +234,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.COMPLETED);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -259,7 +258,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -283,7 +282,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(null);
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
@@ -307,7 +306,7 @@ public class TaskTest {
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");
         task.setContext("original");
-        task.setExpectedDuration(Duration.ofSeconds(10));
+        task.setExpectedDurationInHours(10);
         task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);

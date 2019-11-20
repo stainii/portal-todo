@@ -60,7 +60,7 @@ public class TaskTemplate {
      */
     private Duration deviationOfTheMainTaskDueDateTime;
 
-    private Duration expectedDuration;
+    private Integer expectedDurationInHours;
 
     @NonNull
     private String context;

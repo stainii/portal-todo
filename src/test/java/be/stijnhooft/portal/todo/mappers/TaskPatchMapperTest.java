@@ -9,13 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TaskPatchMapperTest {
@@ -34,11 +33,11 @@ public class TaskPatchMapperTest {
         task.setDueDateTime(LocalDateTime.of(2019, 10, 10, 10, 10));
         task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
         task.setStartDateTime(LocalDateTime.of(2019, 11, 11, 11, 11));
-        task.setExpectedDuration(Duration.ofSeconds(100));
+        task.setExpectedDurationInHours(10);
         task.setContext("context");
         task.setDescription("description");
         task.setName("name");
-        task.setSubTasks(Arrays.asList(subTask));
+        task.setSubTasks(Collections.singletonList(subTask));
         task.setCreationDateTime(LocalDateTime.of(2019, 9, 8, 7, 6));
 
         TaskPatch taskPatch = taskPatchMapper.from(task);
@@ -49,7 +48,7 @@ public class TaskPatchMapperTest {
         assertThat(taskPatch.getChange("dueDateTime"), is("2019-10-10T10:10"));
         assertThat(taskPatch.getChange("importance"), is("I_DO_NOT_REALLY_CARE"));
         assertThat(taskPatch.getChange("startDateTime"), is("2019-11-11T11:11"));
-        assertThat(taskPatch.getChange("expectedDuration"), is("PT1M40S"));
+        assertThat(taskPatch.getChange("expectedDurationInHours"), is("10"));
         assertThat(taskPatch.getChange("context"), is("context"));
         assertThat(taskPatch.getChange("description"), is("description"));
         assertThat(taskPatch.getChange("name"), is("name"));

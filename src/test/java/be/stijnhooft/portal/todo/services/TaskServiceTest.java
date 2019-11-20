@@ -5,18 +5,23 @@ import be.stijnhooft.portal.todo.mappers.TaskPatchMapper;
 import be.stijnhooft.portal.todo.messaging.EventPublisher;
 import be.stijnhooft.portal.todo.model.Task;
 import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.TaskStatus;
 import be.stijnhooft.portal.todo.repositories.TaskPatchRepository;
 import be.stijnhooft.portal.todo.repositories.TaskRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
@@ -38,8 +43,110 @@ public class TaskServiceTest {
     @Mock
     private TaskPatchMapper taskPatchMapper;
 
-    @InjectMocks
+    private Clock clock = Clock.fixed(LocalDateTime.of(2019, 11, 20, 10, 0, 0).toInstant(ZoneOffset.UTC), ZoneId.of("UTC"));
+
     private TaskService taskService;
+
+    @Before
+    public void init() {
+        taskService = new TaskService(taskRepository, taskPatchRepository, taskTemplateService, eventPublisher, taskPatchMapper, clock);
+    }
+
+    @Test
+    public void createWhenNewTaskHasNoStatusYet() {
+        // arrange
+        LocalDateTime startDateTime = LocalDateTime.now();
+        Task task = new Task();
+        task.setStartDateTime(startDateTime);
+
+        TaskPatch patch = new TaskPatch();
+
+        doReturn(patch).when(taskPatchMapper).from(task);
+
+        // act
+        Task createdTask = taskService.create(task);
+
+        // assert
+        verify(taskRepository).save(task);
+        verify(taskPatchMapper).from(task);
+        verify(taskPatchRepository).save(patch);
+        verify(eventPublisher).publishTaskCreated(patch);
+
+        assertThat(createdTask.getStartDateTime(), is(equalTo(startDateTime)));
+        assertThat(createdTask.getStatus(), is(equalTo(TaskStatus.OPEN)));
+    }
+
+    @Test
+    public void createWhenNewTaskHasNoStartDateYet() {
+        // arrange
+        TaskStatus status = TaskStatus.COMPLETED;
+        Task task = new Task();
+        task.setStatus(status);
+
+        TaskPatch patch = new TaskPatch();
+
+        doReturn(patch).when(taskPatchMapper).from(task);
+
+        // act
+        Task createdTask = taskService.create(task);
+
+        // assert
+        verify(taskRepository).save(task);
+        verify(taskPatchMapper).from(task);
+        verify(taskPatchRepository).save(patch);
+        verify(eventPublisher).publishTaskCreated(patch);
+
+        assertThat(createdTask.getStartDateTime(), is(equalTo(LocalDateTime.of(2019, 11, 20, 10, 0, 0))));
+        assertThat(createdTask.getStatus(), is(equalTo(status)));
+    }
+
+    @Test
+    public void createWhenNewTaskHasAllRequiredFieldsFilledIn() {
+        // arrange
+        LocalDateTime startDateTime = LocalDateTime.now();
+        TaskStatus status = TaskStatus.COMPLETED;
+        Task task = new Task();
+        task.setStatus(status);
+        task.setStartDateTime(startDateTime);
+
+        TaskPatch patch = new TaskPatch();
+
+        doReturn(patch).when(taskPatchMapper).from(task);
+
+        // act
+        Task createdTask = taskService.create(task);
+
+        // assert
+        verify(taskRepository).save(task);
+        verify(taskPatchMapper).from(task);
+        verify(taskPatchRepository).save(patch);
+        verify(eventPublisher).publishTaskCreated(patch);
+
+        assertThat(createdTask.getStartDateTime(), is(equalTo(startDateTime)));
+        assertThat(createdTask.getStatus(), is(equalTo(status)));
+    }
+
+    @Test
+    public void createWhenNewTaskHasNoStatusAndNoStartDateYet() {
+        // arrange
+        Task task = new Task();
+        TaskPatch patch = new TaskPatch();
+
+        doReturn(patch).when(taskPatchMapper).from(task);
+
+        // act
+        Task createdTask = taskService.create(task);
+
+        // assert
+        verify(taskRepository).save(task);
+        verify(taskPatchMapper).from(task);
+        verify(taskPatchRepository).save(patch);
+        verify(eventPublisher).publishTaskCreated(patch);
+
+        assertThat(createdTask.getStartDateTime(), is(equalTo(LocalDateTime.of(2019, 11, 20, 10, 0, 0))));
+        assertThat(createdTask.getStatus(), is(equalTo(TaskStatus.OPEN)));
+    }
+
 
     @Test
     public void createFromTemplateEntryWhenSuccess() {
@@ -47,20 +154,21 @@ public class TaskServiceTest {
         TaskTemplateEntry taskTemplateEntry = new TaskTemplateEntry();
 
         Task task = new Task();
-        TaskPatch taskPatch = new TaskPatch();
+        TaskPatch patch = new TaskPatch();
 
         doReturn(task).when(taskTemplateService).toTask(taskTemplateEntry);
         doReturn(task).when(taskRepository).save(task);
-        doReturn(taskPatch).when(taskPatchMapper).from(task);
+        doReturn(patch).when(taskPatchMapper).from(task);
 
         // act
         Task result = taskService.createTasksBasedOn(taskTemplateEntry);
 
         // assert
         verify(taskTemplateService).toTask(taskTemplateEntry);
-        verify(eventPublisher).publishTaskCreated(taskPatch);
+        verify(eventPublisher).publishTaskCreated(patch);
         verify(taskRepository).save(task);
         verify(taskPatchMapper).from(task);
+        verify(taskPatchRepository).save(patch);
         verifyNoMoreInteractions(taskTemplateService, taskRepository, taskPatchRepository, eventPublisher);
     }
 
