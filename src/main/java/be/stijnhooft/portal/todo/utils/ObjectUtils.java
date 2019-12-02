@@ -12,7 +12,7 @@ public class ObjectUtils {
     @SneakyThrows
     public static <T> T patch(T oldVersion, T newVersion) {
         for (Field field : Task.class.getDeclaredFields()) {
-            boolean wasAccessible = field.isAccessible();
+            boolean wasAccessible = field.canAccess(newVersion);
             field.setAccessible(true);
 
             Object valueInNewVersion = field.get(newVersion);
@@ -30,7 +30,7 @@ public class ObjectUtils {
     public static Map<String, String> getAllFieldsAndTheirValues(Object object) {
         Map<String, String> allFieldsAndTheirValues = new HashMap<>();
         for (Field field : object.getClass().getDeclaredFields()) {
-            boolean wasAccessible = field.isAccessible();
+            boolean wasAccessible = field.canAccess(object);
             field.setAccessible(true);
 
             String fieldName = field.getName();
