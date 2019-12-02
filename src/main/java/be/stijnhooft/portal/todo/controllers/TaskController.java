@@ -8,6 +8,7 @@ import be.stijnhooft.portal.todo.services.TaskPatchService;
 import be.stijnhooft.portal.todo.services.TaskService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class TaskController {
 
 
     @PostMapping
-    public Task create(@RequestBody Task task) {
+    public Task create(@RequestBody @Valid Task task) {
         return taskService.create(task);
     }
 
@@ -55,7 +56,7 @@ public class TaskController {
      * So, clients are expected to only patch the changed fields.
      */
     @PatchMapping("/{id}")
-    public TaskPatchResult patch(@RequestBody TaskPatch taskPatch, @PathVariable("id") String id) {
+    public TaskPatchResult patch(@RequestBody @Valid TaskPatch taskPatch, @PathVariable("id") String id) {
         taskPatch.setTaskId(id);
         return taskPatchService.patch(taskPatch);
     }
