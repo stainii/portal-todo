@@ -124,7 +124,7 @@ public class TaskPatchServiceTest {
         TaskPatch patch = new TaskPatch();
         patch.setTaskId("10");
         patch.addChange("status", "OPEN");
-        patch.addChange("dueDateTime", "2019-05-20T11:00:00");
+        patch.addChange("dueDateTime", "2019-05-20T11:00:00Z");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
         doReturn(task).when(taskService).save(task);
@@ -160,7 +160,7 @@ public class TaskPatchServiceTest {
 
         TaskPatch patch = new TaskPatch();
         patch.setTaskId("10");
-        patch.addChange("dueDateTime", "2019-05-20T11:00:00");
+        patch.addChange("dueDateTime", "2019-05-20T11:00:00Z");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
         doReturn(task).when(taskService).save(task);
@@ -196,7 +196,7 @@ public class TaskPatchServiceTest {
         TaskPatch patch = new TaskPatch();
         patch.setTaskId("10");
         patch.addChange("status", "COMPLETED");
-        patch.addChange("dueDateTime", "2019-05-20T11:00:00");
+        patch.addChange("dueDateTime", "2019-05-20T11:00:00Z");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
         doReturn(task).when(taskService).save(task);

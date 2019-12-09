@@ -5,7 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,8 +63,8 @@ public class Task {
 
         // apply patch
         patchIfNeeded(taskPatch, "name", newValue -> this.setName(newValue));
-        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
-        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
+        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(newValue == null ? null : Instant.parse(newValue).atZone(ZoneId.of("Europe/Brussels")).toLocalDateTime()));
+        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(newValue == null ? null : Instant.parse(newValue).atZone(ZoneId.of("Europe/Brussels")).toLocalDateTime()));
         patchIfNeeded(taskPatch, "expectedDurationInHours", newValue -> this.setExpectedDurationInHours(newValue == null ? null : Integer.parseInt(newValue)));
         patchIfNeeded(taskPatch, "context", newValue -> this.setContext(newValue));
         patchIfNeeded(taskPatch, "importance", newValue -> this.setImportance(newValue == null ? null : Importance.valueOf(newValue)));

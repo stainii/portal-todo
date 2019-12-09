@@ -18,7 +18,10 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,6 +31,7 @@ import static org.mockito.Mockito.*;
 
 /** This is an integration test, firing internal events
  * and checking whether the correct external events are published **/
+@SuppressWarnings("unchecked")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("local")
@@ -45,10 +49,11 @@ public class PublishTaskEventsServiceIntegrationTest {
     @Mock
     private MessageChannel messageChannel;
 
+    @SuppressWarnings("unchecked")
     @Test
     public void onCreate() {
         // arrange
-        LocalDateTime dueDateTime = LocalDateTime.of(2019, 5, 31, 10, 0);
+        Instant dueDateTime = ZonedDateTime.of(2019, 5, 31, 10, 0, 0, 0, ZoneId.of("Europe/Brussels")).toInstant();
 
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId("10");
@@ -59,7 +64,7 @@ public class PublishTaskEventsServiceIntegrationTest {
         Task task = new Task();
         task.setId("10");
         task.setName("name");
-        task.setDueDateTime(dueDateTime);
+        task.setDueDateTime(LocalDateTime.of(2019, 5, 31, 10, 0));
         task.setStatus(TaskStatus.OPEN);
         task.getHistory().add(taskPatch);
         taskService.save(task);
@@ -83,13 +88,13 @@ public class PublishTaskEventsServiceIntegrationTest {
         assertEquals(3, event.getData().keySet().size());
         assertEquals("schedule", event.getData().get("type"));
         assertEquals("name", event.getData().get("task"));
-        assertEquals(dueDateTime.toString(), event.getData().get("dueDate"));
+        assertEquals("2019-05-31T10:00", event.getData().get("dueDate"));
     }
 
     @Test
     public void onReschedule() {
         // arrange
-        LocalDateTime newDueDateTime = LocalDateTime.of(2019, 5, 31, 10, 0);
+        Instant newDueDateTime = ZonedDateTime.of(2019, 5, 31, 10, 0, 0, 0, ZoneId.of("Europe/Brussels")).toInstant();
 
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId("10");
@@ -134,13 +139,13 @@ public class PublishTaskEventsServiceIntegrationTest {
         assertEquals(3, event2.getData().keySet().size());
         assertEquals("schedule", event2.getData().get("type"));
         assertEquals("name", event2.getData().get("task"));
-        assertEquals(newDueDateTime.toString(), event2.getData().get("dueDate"));
+        assertEquals("2019-05-31T10:00", event2.getData().get("dueDate"));
     }
 
     @Test
     public void onCompleted() {
         // data set
-        LocalDateTime dueDateTime = LocalDateTime.of(2019, 5, 31, 10, 0);
+        Instant dueDateTime = ZonedDateTime.of(2019, 5, 31, 10, 0, 0, 0, ZoneId.of("Europe/Brussels")).toInstant();
 
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId("10");
@@ -172,7 +177,7 @@ public class PublishTaskEventsServiceIntegrationTest {
     @Test
     public void onCancelled() {
         // data set
-        LocalDateTime dueDateTime = LocalDateTime.of(2019, 5, 31, 10, 0);
+        Instant dueDateTime = ZonedDateTime.of(2019, 5, 31, 10, 0, 0, 0, ZoneId.of("Europe/Brussels")).toInstant();
 
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId("10");

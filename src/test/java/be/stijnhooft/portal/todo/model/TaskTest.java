@@ -3,6 +3,8 @@ package be.stijnhooft.portal.todo.model;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -46,8 +48,8 @@ public class TaskTest {
         taskPatch.addChange("description", "new");
         taskPatch.addChange("context", "new");
         taskPatch.addChange("expectedDurationInHours", "1");
-        taskPatch.addChange("startDateTime", "2019-02-02T02:02:02");
-        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02");
+        taskPatch.addChange("startDateTime", ZonedDateTime.of(2019, 2, 2, 2, 2, 2, 0, ZoneId.of("Europe/Brussels")).toInstant().toString());
+        taskPatch.addChange("dueDateTime", ZonedDateTime.of(2019, 2, 2, 2, 2, 2, 0, ZoneId.of("Europe/Brussels")).toInstant().toString());
         taskPatch.addChange("importance", "VERY_IMPORTANT");
 
         Task task = new Task();
@@ -275,7 +277,7 @@ public class TaskTest {
     public void patchWhenADueDateTimeHasBeenAdded() {
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
-        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02");
+        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02Z");
 
         Task task = new Task();
         task.setName("original");
@@ -299,7 +301,7 @@ public class TaskTest {
     public void patchWhenTheDueDateTimeHasBeenChanged() {
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
-        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02");
+        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02Z");
 
         Task task = new Task();
         task.setName("original");

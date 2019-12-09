@@ -62,12 +62,22 @@ public class TaskTemplate {
 
     private Integer expectedDurationInHours;
 
+    /**
+     * Can contain variable names. The variable names need to be defined in attribute {@link #variableNames}.
+     *
+     * Example: "Hello, ${user}!"
+     */
     @NonNull
     private String context;
 
     @NonNull
     private Importance importance;
 
+    /**
+     * Can contain variable names. The variable names need to be defined in attribute {@link #variableNames}.
+     *
+     * Example: "Hello, ${user}!"
+     */
     private String description;
 
     private List<TaskTemplate> subTaskTemplates = new ArrayList<>();
