@@ -12,9 +12,7 @@ public class TaskPatchMapper {
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId(task.getId());
         taskPatch.setDate(task.getCreationDateTime());
-
         taskPatch.setChanges(ObjectUtils.getAllFieldsAndTheirValues(task));
-        taskPatch.removeChange("subTasks");
         return taskPatch;
     }
 

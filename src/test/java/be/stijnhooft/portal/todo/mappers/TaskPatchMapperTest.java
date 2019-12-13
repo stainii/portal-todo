@@ -10,10 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -37,7 +35,6 @@ public class TaskPatchMapperTest {
         task.setContext("context");
         task.setDescription("description");
         task.setName("name");
-        task.setSubTasks(Collections.singletonList(subTask));
         task.setCreationDateTime(LocalDateTime.of(2019, 9, 8, 7, 6));
 
         TaskPatch taskPatch = taskPatchMapper.from(task);
@@ -52,7 +49,6 @@ public class TaskPatchMapperTest {
         assertThat(taskPatch.getChange("context"), is("context"));
         assertThat(taskPatch.getChange("description"), is("description"));
         assertThat(taskPatch.getChange("name"), is("name"));
-        assertThat(taskPatch.getChange("subTasks"), is(nullValue()));
         assertThat(taskPatch.getChange("creationDateTime"), is("2019-09-08T07:06"));
     }
 

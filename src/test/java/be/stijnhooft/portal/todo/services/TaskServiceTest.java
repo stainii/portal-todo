@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -147,7 +148,6 @@ public class TaskServiceTest {
         assertThat(createdTask.getStatus(), is(equalTo(TaskStatus.OPEN)));
     }
 
-
     @Test
     public void createFromTemplateEntryWhenSuccess() {
         // arrange
@@ -156,15 +156,15 @@ public class TaskServiceTest {
         Task task = new Task();
         TaskPatch patch = new TaskPatch();
 
-        doReturn(task).when(taskTemplateService).toTask(taskTemplateEntry);
+        doReturn(Collections.singletonList(task)).when(taskTemplateService).toTasks(taskTemplateEntry);
         doReturn(task).when(taskRepository).save(task);
         doReturn(patch).when(taskPatchMapper).from(task);
 
         // act
-        Task result = taskService.createTasksBasedOn(taskTemplateEntry);
+        taskService.createTasksBasedOn(taskTemplateEntry);
 
         // assert
-        verify(taskTemplateService).toTask(taskTemplateEntry);
+        verify(taskTemplateService).toTasks(taskTemplateEntry);
         verify(eventPublisher).publishTaskCreated(patch);
         verify(taskRepository).save(task);
         verify(taskPatchMapper).from(task);

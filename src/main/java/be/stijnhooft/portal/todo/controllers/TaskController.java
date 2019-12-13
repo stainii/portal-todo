@@ -35,7 +35,7 @@ public class TaskController {
     }
 
     @PostMapping("/from-template/")
-    public Task createFromTemplate(@RequestBody TaskTemplateEntry taskTemplateEntry) {
+    public List<Task> createFromTemplate(@RequestBody TaskTemplateEntry taskTemplateEntry) {
         return taskService.createTasksBasedOn(taskTemplateEntry);
     }
 

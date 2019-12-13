@@ -8,10 +8,12 @@ This todo app is built around the principles of the famous 7 habits book, dividi
 
 * Urgent, important             => Fires to extinguish
 * Not urgent, important         => The tasks that help you the most
-* Urgent, not important         => Tasks to be avoided in the future
-* Not urgent, not important     => Tasks to never look at again
+* Urgent, not important         => Tasks to be done sometime, but to be avoided in the future
+* Not urgent, not important     => Tasks to never look at again, unless I'm really bored
 
 ## Task templates
-Also, some tasks always lead to other tasks. For example, when organizing an event, the preparations need a regular follow-up.
+Some tasks always lead to other tasks.
+For example, when organizing an event, multiple tasks have to be created: send out invitations, agree on a date, get everything ready, follow-up afterwards how everyone experienced the event, ...
 
-This app allows me to define task templates. When I add a task, that I often have to do, subtasks are automatically created and planned.
+This app allows me to define task templates. When creating a task, I can select a task template, which results in multiple, relevant tasks.
+No more forgetting to follow up on something!

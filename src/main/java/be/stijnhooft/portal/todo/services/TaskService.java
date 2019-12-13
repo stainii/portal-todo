@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -69,9 +70,11 @@ public class TaskService {
         return task;
     }
 
-    public Task createTasksBasedOn(@NonNull TaskTemplateEntry taskTemplateEntry) {
-        Task task = taskTemplateService.toTask(taskTemplateEntry);
-        return create(task);
+    public List<Task> createTasksBasedOn(@NonNull TaskTemplateEntry taskTemplateEntry) {
+        var tasks = taskTemplateService.toTasks(taskTemplateEntry);
+        return tasks.stream()
+                .map(this::create)
+                .collect(Collectors.toList());
     }
 
     public Task save(@NonNull Task task) {

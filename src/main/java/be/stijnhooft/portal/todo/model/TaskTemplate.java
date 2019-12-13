@@ -2,6 +2,7 @@ package be.stijnhooft.portal.todo.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Duration;
@@ -10,7 +11,7 @@ import java.util.List;
 
 /**
  * A template that can be used to create tasks ({@link Task}).
- * This is useful if the creation of a certain task always leads to the creation of subtasks.
+ * This is useful if the creation of a certain task always leads to the creation of follow-up tasks.
  * By choosing a template, selecting the main task's due date and optionally providing variable values, multiple tasks can be created at once.
  *
  * In order to create a task, a {@link be.stijnhooft.portal.todo.dtos.TaskTemplateEntry} needs to be provided.
@@ -80,7 +81,8 @@ public class TaskTemplate {
      */
     private String description;
 
-    private List<TaskTemplate> subTaskTemplates = new ArrayList<>();
+    @DBRef
+    private List<TaskTemplate> followUpTaskTemplates = new ArrayList<>();
 
     /**
      * Names of variables that need to be replaced in certain attributes of the class.

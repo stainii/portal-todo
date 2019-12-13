@@ -47,8 +47,6 @@ public class Task {
 
     private String description;
 
-    private List<Task> subTasks = new ArrayList<>();
-
     @NonNull
     private TaskStatus status;
 

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,8 +33,8 @@ public class TaskTemplateService {
         this.clock = clock;
     }
 
-    public Task toTask(TaskTemplateEntry taskTemplateEntry) {
-        return toTask(taskTemplateEntry.getTaskTemplate(),
+    public List<Task> toTasks(TaskTemplateEntry taskTemplateEntry) {
+        return toTasks(taskTemplateEntry.getTaskTemplate(),
                 taskTemplateEntry.getStartDateTimeOfMainTask(),
                 taskTemplateEntry.getDueDateTimeOfMainTask(),
                 taskTemplateEntry.getVariables());
@@ -44,19 +45,31 @@ public class TaskTemplateService {
     }
 
     public TaskTemplate create(TaskTemplate taskTemplate) {
+        for (TaskTemplate subTaskTemplate : taskTemplate.getFollowUpTaskTemplates()) {
+            create(subTaskTemplate);
+        }
         return repository.save(taskTemplate);
     }
 
     public TaskTemplate update(TaskTemplate taskTemplate) {
-        return repository.save(taskTemplate);
+        delete(taskTemplate.getId());
+        return create(taskTemplate);
     }
 
     public void delete(String id) {
-        repository.deleteById(id);
+        repository.findById(id)
+                .ifPresent(this::delete);
     }
 
-    private Task toTask(TaskTemplate taskTemplate, LocalDateTime startDateTimeOfMainTask,
-                        LocalDateTime dueDateTimeOfMainTask, Map<String, String> variables) {
+    public void delete(TaskTemplate taskTemplate) {
+        for (TaskTemplate subTaskTemplate : taskTemplate.getFollowUpTaskTemplates()) {
+            delete(subTaskTemplate);
+        }
+        repository.delete(taskTemplate);
+    }
+
+    private List<Task> toTasks(TaskTemplate taskTemplate, LocalDateTime startDateTimeOfMainTask,
+                               LocalDateTime dueDateTimeOfMainTask, Map<String, String> variables) {
         // fill in all variables in all strings
         String name = fillInVariables(taskTemplate.getName(), variables)
                 .orElseThrow(() -> new IllegalArgumentException("The name of a task template cannot be null."));
@@ -66,24 +79,29 @@ public class TaskTemplateService {
                 .orElse(null);
 
         // calculate dates
-        LocalDateTime startDateTime = addDurationTo(startDateTimeOfMainTask, taskTemplate.getDeviationOfTheMainTaskStartDateTime())
+        var startDateTime = addDurationTo(startDateTimeOfMainTask, taskTemplate.getDeviationOfTheMainTaskStartDateTime())
                 .orElse(null);
-        LocalDateTime dueDateTime = addDurationTo(dueDateTimeOfMainTask, taskTemplate.getDeviationOfTheMainTaskDueDateTime())
+        var dueDateTime = addDurationTo(dueDateTimeOfMainTask, taskTemplate.getDeviationOfTheMainTaskDueDateTime())
                 .orElse(null);
 
         // other variables
         var expectedDurationInHours = taskTemplate.getExpectedDurationInHours();
         var urgency = taskTemplate.getImportance();
 
-        // do the same for sub tasks
-        var subTasks = taskTemplate.getSubTaskTemplates()
+        // assemble task
+        var task = new Task(null, name, LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault()),
+                startDateTime, dueDateTime, expectedDurationInHours, context, urgency,
+                description, TaskStatus.OPEN, null);
+
+        // do the same for follow-up tasks
+        var followUpTasks = taskTemplate.getFollowUpTaskTemplates()
                 .stream()
-                .map(subTask -> toTask(subTask, startDateTimeOfMainTask, dueDateTimeOfMainTask, variables))
+                .flatMap(subTask -> toTasks(subTask, startDateTimeOfMainTask, dueDateTimeOfMainTask, variables).stream())
                 .collect(Collectors.toList());
 
-        // assemble task
-        return new Task(null, name, LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault()),
-                startDateTime, dueDateTime, expectedDurationInHours, context, urgency,
-                description, subTasks, TaskStatus.OPEN, null);
+        var allTasks = new ArrayList<Task>();
+        allTasks.add(task);
+        allTasks.addAll(followUpTasks);
+        return allTasks;
     }
 }
