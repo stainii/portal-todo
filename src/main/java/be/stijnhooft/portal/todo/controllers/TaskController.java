@@ -1,9 +1,9 @@
 package be.stijnhooft.portal.todo.controllers;
 
 import be.stijnhooft.portal.todo.dtos.TaskTemplateEntry;
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
-import be.stijnhooft.portal.todo.model.TaskPatchResult;
+import be.stijnhooft.portal.todo.model.task.Task;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskPatchResult;
 import be.stijnhooft.portal.todo.services.TaskPatchService;
 import be.stijnhooft.portal.todo.services.TaskService;
 import org.springframework.web.bind.annotation.*;

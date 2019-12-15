@@ -1,4 +1,4 @@
-package be.stijnhooft.portal.todo.model;
+package be.stijnhooft.portal.todo.model.task;
 
 import java.util.Arrays;
 

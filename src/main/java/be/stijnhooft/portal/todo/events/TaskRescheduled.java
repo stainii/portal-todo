@@ -1,8 +1,10 @@
 package be.stijnhooft.portal.todo.events;
 
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
-import lombok.*;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Data

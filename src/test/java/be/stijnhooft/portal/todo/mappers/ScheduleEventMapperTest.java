@@ -1,13 +1,14 @@
 package be.stijnhooft.portal.todo.mappers;
 
 import be.stijnhooft.portal.model.domain.Event;
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.Task;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.repositories.TaskRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.Clock;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)

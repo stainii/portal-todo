@@ -8,10 +8,8 @@ import be.stijnhooft.portal.todo.events.TaskRescheduled;
 import be.stijnhooft.portal.todo.mappers.CancellationEventMapper;
 import be.stijnhooft.portal.todo.mappers.ScheduleEventMapper;
 import be.stijnhooft.portal.todo.messaging.EventPublisher;
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service

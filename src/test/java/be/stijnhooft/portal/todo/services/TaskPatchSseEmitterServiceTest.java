@@ -2,28 +2,20 @@ package be.stijnhooft.portal.todo.services;
 
 import be.stijnhooft.portal.todo.events.TaskCreated;
 import be.stijnhooft.portal.todo.events.TaskPatched;
-import be.stijnhooft.portal.todo.model.TaskPatch;
-import org.hamcrest.CoreMatchers;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
 public class TaskPatchSseEmitterServiceTest {

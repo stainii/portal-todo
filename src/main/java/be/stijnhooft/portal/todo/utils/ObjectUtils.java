@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.todo.utils;
 
-import be.stijnhooft.portal.todo.model.Task;
+import be.stijnhooft.portal.todo.model.task.Task;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;

@@ -1,8 +1,8 @@
 package be.stijnhooft.portal.todo.mappers;
 
 import be.stijnhooft.portal.model.domain.Event;
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.Task;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.repositories.TaskRepository;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;

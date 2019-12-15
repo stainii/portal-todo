@@ -1,9 +1,9 @@
 package be.stijnhooft.portal.todo.services;
 
 import be.stijnhooft.portal.todo.messaging.EventPublisher;
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
-import be.stijnhooft.portal.todo.model.TaskPatchResult;
+import be.stijnhooft.portal.todo.model.task.Task;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskPatchResult;
 import be.stijnhooft.portal.todo.repositories.TaskPatchRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

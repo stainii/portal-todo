@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.todo.repositories;
 
-import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

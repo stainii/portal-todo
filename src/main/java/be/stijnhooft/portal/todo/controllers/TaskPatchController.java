@@ -1,9 +1,9 @@
 package be.stijnhooft.portal.todo.controllers;
 
-import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.services.SecurityService;
-import be.stijnhooft.portal.todo.services.TaskPatchSseEmitterService;
 import be.stijnhooft.portal.todo.services.TaskPatchService;
+import be.stijnhooft.portal.todo.services.TaskPatchSseEmitterService;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 

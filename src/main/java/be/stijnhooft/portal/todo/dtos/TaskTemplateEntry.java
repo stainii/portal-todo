@@ -1,10 +1,9 @@
 package be.stijnhooft.portal.todo.dtos;
 
-import be.stijnhooft.portal.todo.model.TaskTemplate;
+import be.stijnhooft.portal.todo.model.template.TaskTemplate;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 /**

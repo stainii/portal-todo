@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.todo.events;
 
-import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

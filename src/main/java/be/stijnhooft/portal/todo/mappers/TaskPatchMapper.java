@@ -1,7 +1,7 @@
 package be.stijnhooft.portal.todo.mappers;
 
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.Task;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.utils.ObjectUtils;
 import org.springframework.stereotype.Component;
 

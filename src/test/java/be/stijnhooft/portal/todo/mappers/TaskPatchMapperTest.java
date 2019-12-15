@@ -1,9 +1,9 @@
 package be.stijnhooft.portal.todo.mappers;
 
-import be.stijnhooft.portal.todo.model.Importance;
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
-import be.stijnhooft.portal.todo.model.TaskStatus;
+import be.stijnhooft.portal.todo.model.task.Importance;
+import be.stijnhooft.portal.todo.model.task.Task;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

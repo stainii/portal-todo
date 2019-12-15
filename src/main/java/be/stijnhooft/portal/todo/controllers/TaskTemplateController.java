@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.todo.controllers;
 
-import be.stijnhooft.portal.todo.model.TaskTemplate;
+import be.stijnhooft.portal.todo.model.template.TaskTemplate;
 import be.stijnhooft.portal.todo.services.TaskTemplateService;
 import org.springframework.web.bind.annotation.*;
 

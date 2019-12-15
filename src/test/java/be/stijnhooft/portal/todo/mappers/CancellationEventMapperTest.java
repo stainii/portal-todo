@@ -1,14 +1,11 @@
 package be.stijnhooft.portal.todo.mappers;
 
 import be.stijnhooft.portal.model.domain.Event;
-import be.stijnhooft.portal.todo.model.Task;
-import be.stijnhooft.portal.todo.model.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.time.LocalDateTime;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
 import static org.hamcrest.CoreMatchers.*;
