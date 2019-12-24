@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static be.stijnhooft.portal.todo.utils.DateTimeUtils.addDurationTo;
+import static be.stijnhooft.portal.todo.utils.DateTimeUtils.addDaysTo;
 import static be.stijnhooft.portal.todo.utils.StringUtils.fillInVariables;
 
 @Service
@@ -69,9 +69,9 @@ public class TaskTemplateService {
                             .orElse(null);
 
                     // calculate dates
-                    var startDateTime = addDurationTo(startDateTimeOfMainTask, taskDefinition.getDeviationOfTheMainTaskStartDateTime())
+                    var startDateTime = addDaysTo(startDateTimeOfMainTask, taskDefinition.getDeviationOfTheMainTaskStartDateTimeInDays())
                             .orElse(null);
-                    var dueDateTime = addDurationTo(dueDateTimeOfMainTask, taskDefinition.getDeviationOfTheMainTaskDueDateTime())
+                    var dueDateTime = addDaysTo(dueDateTimeOfMainTask, taskDefinition.getDeviationOfTheMainTaskDueDateTimeInDays())
                             .orElse(null);
 
                     // other variables
@@ -84,7 +84,5 @@ public class TaskTemplateService {
                             description, TaskStatus.OPEN, null);
                 })
                 .collect(Collectors.toList());
-
-
     }
 }

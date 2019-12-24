@@ -1,16 +1,15 @@
 package be.stijnhooft.portal.todo.utils;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class DateTimeUtils {
 
-    public static Optional<LocalDateTime> addDurationTo(LocalDateTime base, Duration duration) {
-        if (base == null || duration == null) {
+    public static Optional<LocalDateTime> addDaysTo(LocalDateTime base, Integer days) {
+        if (base == null || days == null) {
             return Optional.empty();
         } else {
-            return Optional.of(base.plus(duration));
+            return Optional.of(base.plusDays(days));
         }
     }
 

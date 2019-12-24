@@ -42,7 +42,6 @@ public class Task {
     @NonNull
     private String context;
 
-    @NonNull
     private Importance importance;
 
     private String description;

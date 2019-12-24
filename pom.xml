@@ -1,216 +1,231 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>be.stijnhooft.portal</groupId>
-	<artifactId>portal-todo</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<name>portal-todo</name>
-	<description>Todo module for my personal portal</description>
-	<url>http://portal.stijnhooft.be/Todo</url>
-	<licenses>
-		<license>
-			<name>MIT License</name>
-			<url>http://www.opensource.org/licenses/mit-license.php</url>
-		</license>
-	</licenses>
-	<developers>
-		<developer>
-			<name>Stijn Hooft</name>
-			<organizationUrl>http://www.stijnhooft.be</organizationUrl>
-		</developer>
-	</developers>
-	<scm>
-		<connection>scm:git:git://github.com/stainii/portal-todo.git</connection>
-		<developerConnection>scm:git:ssh://github.com:stainii/portal-todo.git</developerConnection>
-		<url>http://github.com/stainii/portal-todo/tree/master</url>
-	</scm>
-	<issueManagement>
-		<system>Trello</system>
-		<url>https://trello.com/b/LlzGuRM3/portal</url>
-	</issueManagement>
-	<ciManagement>
-		<system>Jenkins</system>
-		<url>https://server.stijnhooft.be/jenkins/</url>
-	</ciManagement>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.1.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>be.stijnhooft.portal</groupId>
+    <artifactId>portal-todo</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>portal-todo</name>
+    <description>Todo module for my personal portal</description>
+    <url>http://portal.stijnhooft.be/Todo</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Stijn Hooft</name>
+            <organizationUrl>http://www.stijnhooft.be</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/stainii/portal-todo.git</connection>
+        <developerConnection>scm:git:ssh://github.com:stainii/portal-todo.git</developerConnection>
+        <url>http://github.com/stainii/portal-todo/tree/master</url>
+    </scm>
+    <issueManagement>
+        <system>Trello</system>
+        <url>https://trello.com/b/LlzGuRM3/portal</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>https://server.stijnhooft.be/jenkins/</url>
+    </ciManagement>
 
-	<properties>
-		<java.version>11</java.version>
-		<spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
+    <properties>
+        <java.version>11</java.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
 
-		<!-- default parameters used in the application. Override these with a Maven profile -->
-		<environment>dev</environment>
-		<rabbitmq-host>localhost</rabbitmq-host>
-		<rabbitmq-port>5672</rabbitmq-port>
+        <!-- default parameters used in the application. Override these with a Maven profile -->
+        <environment>dev</environment>
+        <rabbitmq-host>localhost</rabbitmq-host>
+        <rabbitmq-port>5672</rabbitmq-port>
 
-	</properties>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream-binder-rabbit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
 
-		<dependency>
-			<groupId>be.stijnhooft</groupId>
-			<artifactId>portal-model</artifactId>
-			<version>1.0.1</version>
-		</dependency>
+        <dependency>
+            <groupId>be.stijnhooft</groupId>
+            <artifactId>portal-model</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 
-		<!-- test dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.flapdoodle.embed</groupId>
-			<artifactId>de.flapdoodle.embed.mongo</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- validate jwt token -->
+        <!-- validate jwt token -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.0</version>
         </dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
-			<version>2.3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>2.3.0</version>
-		</dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
     </dependencies>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>2.9.0</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>external.atlassian.jgitflow</groupId>
-				<artifactId>jgitflow-maven-plugin</artifactId>
-				<version>1.0-m5.1</version>
-				<configuration>
-					<flowInitContext>
-						<masterBranchName>master</masterBranchName>
-						<developBranchName>dev</developBranchName>
-						<featureBranchPrefix>feature-</featureBranchPrefix>
-						<releaseBranchPrefix>release-</releaseBranchPrefix>
-						<hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-					</flowInitContext>
-					<squash>false</squash>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>1.0-m5.1</version>
+                <configuration>
+                    <flowInitContext>
+                        <masterBranchName>master</masterBranchName>
+                        <developBranchName>dev</developBranchName>
+                        <featureBranchPrefix>feature-</featureBranchPrefix>
+                        <releaseBranchPrefix>release-</releaseBranchPrefix>
+                        <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
+                    </flowInitContext>
+                    <squash>false</squash>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<profiles>
-		<profile>
-			<id>production</id>
-			<properties>
-				<environment>production</environment>
-				<rabbitmq-host>portal-rabbitmq</rabbitmq-host>
-				<rabbitmq-port>5672</rabbitmq-port>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.spotify</groupId>
-						<artifactId>dockerfile-maven-plugin</artifactId>
-						<version>1.4.8</version>
-						<executions>
-							<execution>
-								<id>default</id>
-								<goals>
-									<goal>build</goal>
-									<goal>push</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<repository>stainii/${project.artifactId}</repository>
-							<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-							<tag>${project.version}</tag>
-							<buildArgs>
-								<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-							</buildArgs>
-							<noCache>true</noCache>
-						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>javax.activation</groupId>
-								<artifactId>activation</artifactId>
-								<version>1.1.1</version>
-							</dependency>
-						</dependencies>
+    <profiles>
+        <profile>
+            <id>production</id>
+            <properties>
+                <environment>production</environment>
+                <rabbitmq-host>portal-rabbitmq</rabbitmq-host>
+                <rabbitmq-port>5672</rabbitmq-port>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>dockerfile-maven-plugin</artifactId>
+                        <version>1.4.8</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>build</goal>
+                                    <goal>push</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <repository>stainii/${project.artifactId}</repository>
+                            <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                            <tag>${project.version}</tag>
+                            <buildArgs>
+                                <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                            </buildArgs>
+                            <noCache>true</noCache>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>javax.activation</groupId>
+                                <artifactId>activation</artifactId>
+                                <version>1.1.1</version>
+                            </dependency>
+                        </dependencies>
 
 
-						<!-- put the credentials of your Docker registry in your Maven settings.xml (in the .m2 folder).
+                        <!-- put the credentials of your Docker registry in your Maven settings.xml (in the .m2 folder).
                         For example:
 
                         <servers>
@@ -222,45 +237,45 @@
                         </servers>
 
                         -->
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>maven-cognitiveservices-speech</id>
-			<name>Microsoft Cognitive Services Speech Maven Repository</name>
-			<url>https://csspeechstorage.blob.core.windows.net/maven/</url>
-		</repository>
-		<repository>
-			<id>portal-nexus-releases</id>
-			<url>https://server.stijnhooft.be/nexus/repository/maven-releases/</url>
-		</repository>
-		<repository>
-			<id>portal-nexus-snapshots</id>
-			<url>https://server.stijnhooft.be/nexus/repository/maven-snapshots/</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>maven-cognitiveservices-speech</id>
+            <name>Microsoft Cognitive Services Speech Maven Repository</name>
+            <url>https://csspeechstorage.blob.core.windows.net/maven/</url>
+        </repository>
+        <repository>
+            <id>portal-nexus-releases</id>
+            <url>https://server.stijnhooft.be/nexus/repository/maven-releases/</url>
+        </repository>
+        <repository>
+            <id>portal-nexus-snapshots</id>
+            <url>https://server.stijnhooft.be/nexus/repository/maven-snapshots/</url>
+        </repository>
+    </repositories>
 
-	<distributionManagement>
-		<repository>
-			<id>portal-nexus-releases</id>
-			<url>https://server.stijnhooft.be/nexus/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>portal-nexus-snapshots</id>
-			<url>https://server.stijnhooft.be/nexus/repository/maven-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>portal-nexus-releases</id>
+            <url>https://server.stijnhooft.be/nexus/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>portal-nexus-snapshots</id>
+            <url>https://server.stijnhooft.be/nexus/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

@@ -10,8 +10,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.*;
-import java.time.temporal.ChronoUnit;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,8 +45,8 @@ public class TaskTemplateServiceTest {
 
         var taskDefinition1 = new TaskDefinition();
         taskDefinition1.setName("Ask speaker for a workshop about ${subject} at ${school}");
-        taskDefinition1.setDeviationOfTheMainTaskStartDateTime(Duration.ZERO);
-        taskDefinition1.setDeviationOfTheMainTaskDueDateTime(Duration.of(5, ChronoUnit.DAYS));
+        taskDefinition1.setDeviationOfTheMainTaskStartDateTimeInDays(0);
+        taskDefinition1.setDeviationOfTheMainTaskDueDateTimeInDays(5);
         taskDefinition1.setContext("School coordination");
         taskDefinition1.setImportance(Importance.VERY_IMPORTANT);
 

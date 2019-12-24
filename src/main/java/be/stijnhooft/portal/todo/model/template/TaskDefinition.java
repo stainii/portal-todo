@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.time.Duration;
-
 /**
  * The definition of one task in a task template.
  * @see TaskTemplate for more information.
@@ -31,11 +29,11 @@ public class TaskDefinition {
      *
      * Example: when task A can be started, a week later task B can be picked up.
      * The deviation of task A, the main task, is 0.
-     * The deviation of task B, the sub task, is 7 days.
+     * The deviation of task B, the sub task, is 7.
      *
      * If null, no start date will be set for the resulting task.
      */
-    private Duration deviationOfTheMainTaskStartDateTime;
+    private Integer deviationOfTheMainTaskStartDateTimeInDays;
 
     /**
      * Used to calculate the due date of this task, compared to the due date of the main task.
@@ -43,11 +41,11 @@ public class TaskDefinition {
      *
      * Example: when task A has to be done, a week later task B should be picked up.
      * The deviation of task A, the main task, is 0.
-     * The deviation of task B, the sub task, is 7 days.
+     * The deviation of task B, the sub task, is 7.
      *
      * If null, no due date will be set for the resulting task.
      */
-    private Duration deviationOfTheMainTaskDueDateTime;
+    private Integer deviationOfTheMainTaskDueDateTimeInDays;
 
     private Integer expectedDurationInHours;
 
@@ -59,7 +57,6 @@ public class TaskDefinition {
     @NonNull
     private String context;
 
-    @NonNull
     private Importance importance;
 
     /**
