@@ -17,7 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -44,7 +44,7 @@ public class TaskServiceTest {
     @Mock
     private TaskPatchMapper taskPatchMapper;
 
-    private Clock clock = Clock.fixed(LocalDateTime.of(2019, 11, 20, 10, 0, 0).toInstant(ZoneOffset.UTC), ZoneId.of("UTC"));
+    private Clock clock = Clock.fixed(ZonedDateTime.of(2019, 11, 20, 10, 0, 0, 0, ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
 
     private TaskService taskService;
 
@@ -144,7 +144,7 @@ public class TaskServiceTest {
         verify(taskPatchRepository).save(patch);
         verify(eventPublisher).publishTaskCreated(patch);
 
-        assertThat(createdTask.getStartDateTime(), is(equalTo(LocalDateTime.of(2019, 11, 20, 10, 0, 0))));
+        assertThat(createdTask.getStartDateTime(), is(equalTo(LocalDateTime.of(2019, 11, 20, 10, 0, 0, 0))));
         assertThat(createdTask.getStatus(), is(equalTo(TaskStatus.OPEN)));
     }
 

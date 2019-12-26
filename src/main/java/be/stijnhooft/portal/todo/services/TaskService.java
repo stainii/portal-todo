@@ -58,7 +58,7 @@ public class TaskService {
         }
 
         if (task.getStartDateTime() == null) {
-            task.setStartDateTime(clock.instant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+            task.setStartDateTime(clock.instant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         }
 
         taskRepository.save(task);

@@ -27,7 +27,7 @@ public class Task {
     private String name;
 
     @NonNull
-    private LocalDateTime creationDateTime;
+    private Instant creationDateTime;
 
     /**
      * Optional date time, which indicates when a task becomes relevant to pick up.
@@ -70,7 +70,7 @@ public class Task {
 
         // reapply newer patches
         history.stream()
-                .filter(otherUpdate -> otherUpdate.getDate().isAfter(taskPatch.getDate()))
+                .filter(otherUpdate -> otherUpdate.getDateTime().isAfter(taskPatch.getDateTime()))
                 .findFirst()
                 .ifPresent(this::patch);
 

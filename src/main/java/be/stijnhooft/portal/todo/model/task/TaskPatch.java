@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class TaskPatch {
     private String taskId;
 
     @NotNull
-    private LocalDateTime date;
+    private Instant dateTime;
 
     private Map<String, String> changes = new LinkedHashMap<>();
 
@@ -44,7 +44,4 @@ public class TaskPatch {
         return changes.get(field);
     }
 
-    public void removeChange(String field) {
-        changes.remove(field);
-    }
 }

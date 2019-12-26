@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,7 +78,7 @@ public class TaskTemplateService {
                     var urgency = taskDefinition.getImportance();
 
                     // assemble task
-                    return new Task(null, name, LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault()),
+                    return new Task(null, name, clock.instant(),
                             startDateTime, dueDateTime, expectedDurationInHours, context, urgency,
                             description, TaskStatus.OPEN, null);
                 })

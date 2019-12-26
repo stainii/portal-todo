@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 // TODO: find a way to write an integration test for server side events
@@ -36,7 +36,7 @@ public class TaskPatchController {
     }
 
     @GetMapping(path = "/", params = "since")
-    public List<TaskPatch> getAllTaskPatchesSince(@RequestParam("since") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime) {
+    public List<TaskPatch> getAllTaskPatchesSince(@RequestParam("since") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDateTime) {
         return taskPatchService.findAllTaskPatchesSince(startDateTime);
     }
 

@@ -15,7 +15,7 @@ public class TaskTest {
     @Test
     public void patchWhenThereIsNothingToPatch() {
         TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
 
         Task task = new Task();
         task.setName("original");
@@ -42,7 +42,7 @@ public class TaskTest {
     @Test
     public void patchWhenAllFieldsArePatched() {
         TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch.addChange("name", "new");
         taskPatch.addChange("status", "COMPLETED");
         taskPatch.addChange("description", "new");
@@ -77,7 +77,7 @@ public class TaskTest {
     @Test
     public void patchWhenSomeFieldsArePatched() {
         TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch.addChange("name", "new");
         taskPatch.addChange("status", "COMPLETED");
         taskPatch.addChange("description", "new");
@@ -109,18 +109,18 @@ public class TaskTest {
     public void patchWhenAllFieldsHaveBeenPatchedAndThereBothAnOlderAndANewerPatch() {
         // set up data set
         TaskPatch taskPatch1 = new TaskPatch();
-        taskPatch1.setDate(LocalDateTime.of(2017, 1, 1, 1, 1));
+        taskPatch1.setDateTime(ZonedDateTime.of(2017, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch1.addChange("name", "new in 2017");
         taskPatch1.addChange("context", "2017");
         taskPatch1.addChange("description", "2017");
 
         TaskPatch taskPatch2 = new TaskPatch();
-        taskPatch2.setDate(LocalDateTime.of(2018, 1, 1, 1, 1));
+        taskPatch2.setDateTime(ZonedDateTime.of(2018, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch2.addChange("name", "new in 2018");
         taskPatch2.addChange("importance", "VERY_IMPORTANT");
 
         TaskPatch taskPatch3 = new TaskPatch();
-        taskPatch3.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch3.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch3.addChange("name", "new in 2019");
         taskPatch3.addChange("description", "2019");
 
@@ -157,18 +157,18 @@ public class TaskTest {
     public void patchWhenAllFieldsHaveBeenPatchedAndThereAreNewerPatch() {
         // set up data set
         TaskPatch taskPatch1 = new TaskPatch();
-        taskPatch1.setDate(LocalDateTime.of(2017, 1, 1, 1, 1));
+        taskPatch1.setDateTime(ZonedDateTime.of(2017, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch1.addChange("name", "new in 2017");
         taskPatch1.addChange("context", "2017");
         taskPatch1.addChange("description", "2017");
 
         TaskPatch taskPatch2 = new TaskPatch();
-        taskPatch2.setDate(LocalDateTime.of(2018, 1, 1, 1, 1));
+        taskPatch2.setDateTime(ZonedDateTime.of(2018, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch2.addChange("name", "new in 2018");
         taskPatch2.addChange("importance", "VERY_IMPORTANT");
 
         TaskPatch taskPatch3 = new TaskPatch();
-        taskPatch3.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch3.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch3.addChange("name", "new in 2019");
         taskPatch3.addChange("description", "2019");
 
@@ -204,7 +204,7 @@ public class TaskTest {
     @Test
     public void patchWhenTheTaskHasBeenCompleted() {
         TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch.addChange("status", "COMPLETED");
 
         Task task = new Task();
@@ -228,7 +228,7 @@ public class TaskTest {
     @Test
     public void patchWhenTheTaskHasBeenUncompleted() {
         TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch.addChange("status", "OPEN");
 
         Task task = new Task();
@@ -252,7 +252,7 @@ public class TaskTest {
     @Test
     public void patchWhenADueDateTimeHasBeenRemoved() {
         TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch.addChange("dueDateTime", null);
 
         Task task = new Task();
@@ -276,7 +276,7 @@ public class TaskTest {
     @Test
     public void patchWhenADueDateTimeHasBeenAdded() {
         TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02Z");
 
         Task task = new Task();
@@ -300,7 +300,7 @@ public class TaskTest {
     @Test
     public void patchWhenTheDueDateTimeHasBeenChanged() {
         TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setDate(LocalDateTime.of(2019, 1, 1, 1, 1));
+        taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
         taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02Z");
 
         Task task = new Task();

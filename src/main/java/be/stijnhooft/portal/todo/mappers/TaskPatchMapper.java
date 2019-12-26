@@ -11,7 +11,7 @@ public class TaskPatchMapper {
     public TaskPatch from(Task task) {
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId(task.getId());
-        taskPatch.setDate(task.getCreationDateTime());
+        taskPatch.setDateTime(task.getCreationDateTime());
         taskPatch.setChanges(ObjectUtils.getAllFieldsAndTheirValues(task));
         return taskPatch;
     }

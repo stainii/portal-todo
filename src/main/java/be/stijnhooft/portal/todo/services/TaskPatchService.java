@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -29,8 +29,8 @@ public class TaskPatchService {
         this.taskPatchRepository = taskPatchRepository;
     }
 
-    public List<TaskPatch> findAllTaskPatchesSince(LocalDateTime startDateTime) {
-        return taskPatchRepository.findByDateAfter(startDateTime);
+    public List<TaskPatch> findAllTaskPatchesSince(Instant startDateTime) {
+        return taskPatchRepository.findByDateTimeAfter(startDateTime);
     }
 
     public TaskPatchResult patch(TaskPatch taskPatch) {

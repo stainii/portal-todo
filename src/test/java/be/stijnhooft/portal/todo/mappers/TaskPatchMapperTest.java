@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -35,11 +37,11 @@ public class TaskPatchMapperTest {
         task.setContext("context");
         task.setDescription("description");
         task.setName("name");
-        task.setCreationDateTime(LocalDateTime.of(2019, 9, 8, 7, 6));
+        task.setCreationDateTime(ZonedDateTime.of(2019, 9, 8, 7, 6, 0, 0, ZoneId.of("UTC")).toInstant());
 
         TaskPatch taskPatch = taskPatchMapper.from(task);
 
-        assertThat(taskPatch.getDate(), is(LocalDateTime.of(2019, 9, 8, 7, 6)));
+        assertThat(taskPatch.getDateTime(), is(ZonedDateTime.of(2019, 9, 8, 7, 6, 0, 0, ZoneId.of("UTC")).toInstant()));
         assertThat(taskPatch.getTaskId(), is("100"));
         assertThat(taskPatch.getChange("status"), is("OPEN"));
         assertThat(taskPatch.getChange("dueDateTime"), is("2019-10-10T10:10"));
@@ -49,7 +51,7 @@ public class TaskPatchMapperTest {
         assertThat(taskPatch.getChange("context"), is("context"));
         assertThat(taskPatch.getChange("description"), is("description"));
         assertThat(taskPatch.getChange("name"), is("name"));
-        assertThat(taskPatch.getChange("creationDateTime"), is("2019-09-08T07:06"));
+        assertThat(taskPatch.getChange("creationDateTime"), is("2019-09-08T07:06:00Z"));
     }
 
 }
