@@ -53,6 +53,11 @@ public class TaskService {
     }
 
     public Task create(@NonNull Task task) {
+        if (task.getId() == null) {
+            throw new IllegalArgumentException("Task has no id!");
+        }
+
+        // set default values
         if (task.getStatus() == null) {
             task.setStatus(TaskStatus.OPEN);
         }
@@ -61,10 +66,18 @@ public class TaskService {
             task.setStartDateTime(clock.instant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         }
 
+        // clear the history that is provided by the front-end. The back-end will build it's own history.
+        if (task.getHistory() != null) {
+            task.getHistory().clear();
+        }
+
+        // create the first patch of the task: the patch that defines its creation
+        TaskPatch createPatch = taskPatchMapper.from(task);
+        task.patch(createPatch);
+
+        taskPatchRepository.save(createPatch);
         taskRepository.save(task);
 
-        TaskPatch createPatch = taskPatchMapper.from(task);
-        taskPatchRepository.save(createPatch);
         eventPublisher.publishTaskCreated(createPatch);
 
         return task;

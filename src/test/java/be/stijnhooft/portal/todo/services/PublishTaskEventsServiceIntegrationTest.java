@@ -24,6 +24,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -94,12 +95,12 @@ public class PublishTaskEventsServiceIntegrationTest {
     @Test
     public void onReschedule() {
         // arrange
-        Instant newDueDateTime = ZonedDateTime.of(2019, 5, 31, 10, 0, 0, 0, ZoneId.of("Europe/Brussels")).toInstant();
-
         TaskPatch taskPatch = new TaskPatch();
+        taskPatch.setId(UUID.randomUUID().toString());
         taskPatch.setTaskId("10");
+        taskPatch.setDateTime(Instant.now());
         taskPatch.addChange("name", "name");
-        taskPatch.addChange("dueDateTime", newDueDateTime.toString());
+        taskPatch.addChange("dueDateTime", "2019-05-31T10:00:00");
 
         Task task = new Task();
         task.setId("10");

@@ -14,12 +14,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -58,9 +56,11 @@ public class TaskServiceTest {
         // arrange
         LocalDateTime startDateTime = LocalDateTime.now();
         Task task = new Task();
+        task.setId(UUID.randomUUID().toString());
         task.setStartDateTime(startDateTime);
 
         TaskPatch patch = new TaskPatch();
+        patch.setDateTime(Instant.now());
 
         doReturn(patch).when(taskPatchMapper).from(task);
 
@@ -82,9 +82,11 @@ public class TaskServiceTest {
         // arrange
         TaskStatus status = TaskStatus.COMPLETED;
         Task task = new Task();
+        task.setId(UUID.randomUUID().toString());
         task.setStatus(status);
 
         TaskPatch patch = new TaskPatch();
+        patch.setDateTime(Instant.now());
 
         doReturn(patch).when(taskPatchMapper).from(task);
 
@@ -107,10 +109,12 @@ public class TaskServiceTest {
         LocalDateTime startDateTime = LocalDateTime.now();
         TaskStatus status = TaskStatus.COMPLETED;
         Task task = new Task();
+        task.setId(UUID.randomUUID().toString());
         task.setStatus(status);
         task.setStartDateTime(startDateTime);
 
         TaskPatch patch = new TaskPatch();
+        patch.setDateTime(Instant.now());
 
         doReturn(patch).when(taskPatchMapper).from(task);
 
@@ -131,7 +135,10 @@ public class TaskServiceTest {
     public void createWhenNewTaskHasNoStatusAndNoStartDateYet() {
         // arrange
         Task task = new Task();
+        task.setId(UUID.randomUUID().toString());
+
         TaskPatch patch = new TaskPatch();
+        patch.setDateTime(Instant.now());
 
         doReturn(patch).when(taskPatchMapper).from(task);
 
@@ -154,7 +161,10 @@ public class TaskServiceTest {
         TaskTemplateEntry taskTemplateEntry = new TaskTemplateEntry();
 
         Task task = new Task();
+        task.setId(UUID.randomUUID().toString());
+
         TaskPatch patch = new TaskPatch();
+        patch.setDateTime(Instant.now());
 
         doReturn(Collections.singletonList(task)).when(taskTemplateService).toTasks(taskTemplateEntry);
         doReturn(task).when(taskRepository).save(task);

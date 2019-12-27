@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -60,22 +59,25 @@ public class Task {
 
         // apply patch
         patchIfNeeded(taskPatch, "name", newValue -> this.setName(newValue));
-        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(newValue == null ? null : Instant.parse(newValue).atZone(ZoneId.of("Europe/Brussels")).toLocalDateTime()));
-        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(newValue == null ? null : Instant.parse(newValue).atZone(ZoneId.of("Europe/Brussels")).toLocalDateTime()));
+        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
+        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
         patchIfNeeded(taskPatch, "expectedDurationInHours", newValue -> this.setExpectedDurationInHours(newValue == null ? null : Integer.parseInt(newValue)));
         patchIfNeeded(taskPatch, "context", newValue -> this.setContext(newValue));
         patchIfNeeded(taskPatch, "importance", newValue -> this.setImportance(newValue == null ? null : Importance.valueOf(newValue)));
         patchIfNeeded(taskPatch, "description", newValue -> this.setDescription(newValue));
         patchIfNeeded(taskPatch, "status", newValue -> this.setStatus(newValue == null ? null : TaskStatus.valueOf(newValue)));
 
+        // add patch to history
+        if (history == null) {
+            history = new ArrayList<>();
+        }
+        history.add(taskPatch);
+
         // reapply newer patches
         history.stream()
                 .filter(otherUpdate -> otherUpdate.getDateTime().isAfter(taskPatch.getDateTime()))
                 .findFirst()
                 .ifPresent(this::patch);
-
-        // add patch to history
-        history.add(taskPatch);
 
         // create a response summarizing details of what has changed
         return TaskPatchResult.builder()

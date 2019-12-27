@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,10 +38,12 @@ public class TaskPatchMapperTest {
         task.setDescription("description");
         task.setName("name");
         task.setCreationDateTime(ZonedDateTime.of(2019, 9, 8, 7, 6, 0, 0, ZoneId.of("UTC")).toInstant());
+        task.getHistory().add(new TaskPatch());
 
         TaskPatch taskPatch = taskPatchMapper.from(task);
 
         assertThat(taskPatch.getDateTime(), is(ZonedDateTime.of(2019, 9, 8, 7, 6, 0, 0, ZoneId.of("UTC")).toInstant()));
+        assertThat(taskPatch.getId(), is(notNullValue()));
         assertThat(taskPatch.getTaskId(), is("100"));
         assertThat(taskPatch.getChange("status"), is("OPEN"));
         assertThat(taskPatch.getChange("dueDateTime"), is("2019-10-10T10:10"));
@@ -52,6 +54,7 @@ public class TaskPatchMapperTest {
         assertThat(taskPatch.getChange("description"), is("description"));
         assertThat(taskPatch.getChange("name"), is("name"));
         assertThat(taskPatch.getChange("creationDateTime"), is("2019-09-08T07:06:00Z"));
+        assertThat(taskPatch.getChange("history"), is(nullValue()));
     }
 
 }

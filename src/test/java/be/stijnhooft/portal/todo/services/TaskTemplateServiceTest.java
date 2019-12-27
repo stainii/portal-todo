@@ -72,6 +72,7 @@ public class TaskTemplateServiceTest {
         assertThat(tasks, hasSize(2));
 
         var task1 = tasks.get(0);
+        assertThat(task1.getId(), is(notNullValue()));
         assertThat(task1.getName(), is("Ask speaker for a workshop about Git at Hogeschool Gent"));
         assertThat(task1.getStartDateTime(), is(nullValue()));
         assertThat(task1.getDueDateTime(), is(LocalDateTime.of(2019, 4, 26, 12, 0)));
@@ -81,6 +82,7 @@ public class TaskTemplateServiceTest {
         assertThat(task1.getDescription(), is(nullValue()));
 
         var task2 = tasks.get(1);
+        assertThat(task2.getId(), is(notNullValue()));
         assertThat(task2.getName(), is("Ask speakers to pick up goodies"));
         assertThat(task2.getStartDateTime(), is(nullValue()));
         assertThat(task2.getDueDateTime(), is(nullValue()));

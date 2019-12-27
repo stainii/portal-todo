@@ -13,6 +13,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static be.stijnhooft.portal.todo.utils.DateTimeUtils.addDaysTo;
@@ -78,7 +79,7 @@ public class TaskTemplateService {
                     var urgency = taskDefinition.getImportance();
 
                     // assemble task
-                    return new Task(null, name, clock.instant(),
+                    return new Task(UUID.randomUUID().toString(), name, clock.instant(),
                             startDateTime, dueDateTime, expectedDurationInHours, context, urgency,
                             description, TaskStatus.OPEN, null);
                 })

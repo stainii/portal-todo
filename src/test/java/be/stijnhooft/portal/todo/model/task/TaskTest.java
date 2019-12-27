@@ -48,8 +48,8 @@ public class TaskTest {
         taskPatch.addChange("description", "new");
         taskPatch.addChange("context", "new");
         taskPatch.addChange("expectedDurationInHours", "1");
-        taskPatch.addChange("startDateTime", ZonedDateTime.of(2019, 2, 2, 2, 2, 2, 0, ZoneId.of("Europe/Brussels")).toInstant().toString());
-        taskPatch.addChange("dueDateTime", ZonedDateTime.of(2019, 2, 2, 2, 2, 2, 0, ZoneId.of("Europe/Brussels")).toInstant().toString());
+        taskPatch.addChange("startDateTime", "2019-02-02T02:02:02");
+        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02");
         taskPatch.addChange("importance", "VERY_IMPORTANT");
 
         Task task = new Task();
@@ -277,7 +277,7 @@ public class TaskTest {
     public void patchWhenADueDateTimeHasBeenAdded() {
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
-        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02Z");
+        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02");
 
         Task task = new Task();
         task.setName("original");
@@ -301,7 +301,7 @@ public class TaskTest {
     public void patchWhenTheDueDateTimeHasBeenChanged() {
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
-        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02Z");
+        taskPatch.addChange("dueDateTime", "2019-02-02T02:02:02");
 
         Task task = new Task();
         task.setName("original");

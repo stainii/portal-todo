@@ -37,6 +37,14 @@ public class TaskPatchService {
         Task task = taskService.findById(taskPatch.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Cannot find task with id " + taskPatch.getTaskId()));
 
+        if (taskPatch.getId() == null) {
+            throw new IllegalArgumentException("Task patch has no id!");
+        }
+
+        if (taskPatch.getDateTime() == null) {
+            throw new IllegalArgumentException("Task patch with id " + taskPatch.getId() + " has not date time!");
+        }
+
         TaskPatchResult patchResult = task.patch(taskPatch);
 
         taskService.save(task);

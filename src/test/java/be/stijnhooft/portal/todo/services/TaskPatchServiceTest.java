@@ -14,8 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -50,7 +52,9 @@ public class TaskPatchServiceTest {
         task.setContext("old context");
 
         TaskPatch patch = new TaskPatch();
+        patch.setId(UUID.randomUUID().toString());
         patch.setTaskId("10");
+        patch.setDateTime(Instant.now());
         patch.addChange("status", "COMPLETED");
         patch.addChange("context", "new context");
 
@@ -86,7 +90,9 @@ public class TaskPatchServiceTest {
         task.setContext("old context");
 
         TaskPatch patch = new TaskPatch();
+        patch.setId(UUID.randomUUID().toString());
         patch.setTaskId("10");
+        patch.setDateTime(Instant.now());
         patch.addChange("status", "OPEN");
         patch.addChange("context", "new context");
 
@@ -122,9 +128,11 @@ public class TaskPatchServiceTest {
         task.setContext("old context");
 
         TaskPatch patch = new TaskPatch();
+        patch.setId(UUID.randomUUID().toString());
         patch.setTaskId("10");
+        patch.setDateTime(Instant.now());
         patch.addChange("status", "OPEN");
-        patch.addChange("dueDateTime", "2019-05-20T11:00:00Z");
+        patch.addChange("dueDateTime", "2019-05-20T11:00:00");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
         doReturn(task).when(taskService).save(task);
@@ -159,8 +167,10 @@ public class TaskPatchServiceTest {
         task.setContext("old context");
 
         TaskPatch patch = new TaskPatch();
+        patch.setId(UUID.randomUUID().toString());
         patch.setTaskId("10");
-        patch.addChange("dueDateTime", "2019-05-20T11:00:00Z");
+        patch.setDateTime(Instant.now());
+        patch.addChange("dueDateTime", "2019-05-20T11:00:00");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
         doReturn(task).when(taskService).save(task);
@@ -194,9 +204,12 @@ public class TaskPatchServiceTest {
         task.setContext("old context");
 
         TaskPatch patch = new TaskPatch();
+        patch.setId(UUID.randomUUID().toString());
+        patch.setDateTime(Instant.now());
         patch.setTaskId("10");
+        patch.setDateTime(Instant.now());
         patch.addChange("status", "COMPLETED");
-        patch.addChange("dueDateTime", "2019-05-20T11:00:00Z");
+        patch.addChange("dueDateTime", "2019-05-20T11:00:00");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
         doReturn(task).when(taskService).save(task);
@@ -232,7 +245,9 @@ public class TaskPatchServiceTest {
         task.setContext("old context");
 
         TaskPatch patch = new TaskPatch();
+        patch.setId(UUID.randomUUID().toString());
         patch.setTaskId("10");
+        patch.setDateTime(Instant.now());
         patch.addChange("context", "new context");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
@@ -264,6 +279,7 @@ public class TaskPatchServiceTest {
 
         TaskPatch patch = new TaskPatch();
         patch.setTaskId("10");
+        patch.setDateTime(Instant.now());
         patch.addChange("status", "OPEN");
         patch.addChange("dueDateTime", "2019-05-20T11:00:00");
 
@@ -274,6 +290,4 @@ public class TaskPatchServiceTest {
         verify(taskService).findById("10");
         verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
     }
-
-
 }
