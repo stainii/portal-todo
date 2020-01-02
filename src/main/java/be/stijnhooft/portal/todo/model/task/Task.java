@@ -1,5 +1,6 @@
 package be.stijnhooft.portal.todo.model.task;
 
+import be.stijnhooft.portal.todo.utils.DateTimeUtils;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -59,8 +60,8 @@ public class Task {
 
         // apply patch
         patchIfNeeded(taskPatch, "name", newValue -> this.setName(newValue));
-        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
-        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
+        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(DateTimeUtils.parseAsLocalDateTime(newValue)));
+        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(DateTimeUtils.parseAsLocalDateTime(newValue)));
         patchIfNeeded(taskPatch, "expectedDurationInHours", newValue -> this.setExpectedDurationInHours(newValue == null ? null : Integer.parseInt(newValue)));
         patchIfNeeded(taskPatch, "context", newValue -> this.setContext(newValue));
         patchIfNeeded(taskPatch, "importance", newValue -> this.setImportance(newValue == null ? null : Importance.valueOf(newValue)));
