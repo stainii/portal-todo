@@ -1,13 +1,18 @@
 package be.stijnhooft.portal.todo.messaging;
 
+import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 
 public interface EventTopic {
 
-    String OUTPUT = "eventTopic";
+    String INPUT = "readFromEventTopic";
+    String OUTPUT = "writeToEventTopic";
+
+    @Input(INPUT)
+    MessageChannel readFromEventTopic();
 
     @Output(OUTPUT)
-    MessageChannel eventTopic();
+    MessageChannel writeToEventTopic();
 
 }

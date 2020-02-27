@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/task/")
+@RequestMapping("api/task/")
 public class TaskController {
 
     private final TaskService taskService;
