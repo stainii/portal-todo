@@ -1,4 +1,4 @@
-package be.stijnhooft.portal.todo.model.task;
+package be.stijnhooft.portal.todo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

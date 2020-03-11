@@ -59,7 +59,7 @@ public class TaskPatchServiceTest {
         patch.addChange("context", "new context");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
-        doReturn(task).when(taskService).save(task);
+        doReturn(task).when(taskService).update(task);
 
         // act
         TaskPatchResult result = taskPatchService.patch(patch);
@@ -76,7 +76,7 @@ public class TaskPatchServiceTest {
         verify(taskService).findById("10");
         verify(eventPublisher).publishTaskPatched(patch);
         verify(eventPublisher).publishTaskCompleted(patch);
-        verify(taskService).save(task);
+        verify(taskService).update(task);
         verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
     }
 
@@ -97,7 +97,7 @@ public class TaskPatchServiceTest {
         patch.addChange("context", "new context");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
-        doReturn(task).when(taskService).save(task);
+        doReturn(task).when(taskService).update(task);
 
         // act
         TaskPatchResult result = taskPatchService.patch(patch);
@@ -114,7 +114,7 @@ public class TaskPatchServiceTest {
         verify(taskService).findById("10");
         verify(eventPublisher).publishTaskPatched(patch);
         verify(eventPublisher).publishTaskRescheduled(patch);
-        verify(taskService).save(task);
+        verify(taskService).update(task);
         verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
     }
 
@@ -135,7 +135,7 @@ public class TaskPatchServiceTest {
         patch.addChange("dueDateTime", "2019-05-20T11:00:00");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
-        doReturn(task).when(taskService).save(task);
+        doReturn(task).when(taskService).update(task);
 
         // act
         TaskPatchResult result = taskPatchService.patch(patch);
@@ -153,7 +153,7 @@ public class TaskPatchServiceTest {
         verify(taskService).findById("10");
         verify(eventPublisher).publishTaskPatched(patch);
         verify(eventPublisher).publishTaskRescheduled(patch);
-        verify(taskService).save(task);
+        verify(taskService).update(task);
         verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
     }
 
@@ -173,7 +173,7 @@ public class TaskPatchServiceTest {
         patch.addChange("dueDateTime", "2019-05-20T11:00:00");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
-        doReturn(task).when(taskService).save(task);
+        doReturn(task).when(taskService).update(task);
 
         // act
         TaskPatchResult result = taskPatchService.patch(patch);
@@ -190,7 +190,7 @@ public class TaskPatchServiceTest {
         verify(taskService).findById("10");
         verify(eventPublisher).publishTaskPatched(patch);
         verify(eventPublisher).publishTaskRescheduled(patch);
-        verify(taskService).save(task);
+        verify(taskService).update(task);
         verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
     }
 
@@ -212,7 +212,7 @@ public class TaskPatchServiceTest {
         patch.addChange("dueDateTime", "2019-05-20T11:00:00");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
-        doReturn(task).when(taskService).save(task);
+        doReturn(task).when(taskService).update(task);
 
         // act
         TaskPatchResult result = taskPatchService.patch(patch);
@@ -231,7 +231,7 @@ public class TaskPatchServiceTest {
         verify(eventPublisher).publishTaskPatched(patch);
         verify(eventPublisher).publishTaskRescheduled(patch);
         verify(eventPublisher).publishTaskCompleted(patch);
-        verify(taskService).save(task);
+        verify(taskService).update(task);
         verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
     }
 
@@ -251,7 +251,7 @@ public class TaskPatchServiceTest {
         patch.addChange("context", "new context");
 
         doReturn(Optional.of(task)).when(taskService).findById("10");
-        doReturn(task).when(taskService).save(task);
+        doReturn(task).when(taskService).update(task);
 
         // act
         TaskPatchResult result = taskPatchService.patch(patch);
@@ -266,7 +266,7 @@ public class TaskPatchServiceTest {
 
         verify(taskService).findById("10");
         verify(eventPublisher).publishTaskPatched(patch);
-        verify(taskService).save(task);
+        verify(taskService).update(task);
         verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
     }
 

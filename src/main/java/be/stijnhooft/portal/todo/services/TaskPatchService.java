@@ -47,7 +47,7 @@ public class TaskPatchService {
 
         TaskPatchResult patchResult = task.patch(taskPatch);
 
-        taskService.save(task);
+        taskService.update(task);
 
         publishTaskPatchedEvent(taskPatch);
         publishEventWhenTaskHasBeenRescheduled(patchResult);

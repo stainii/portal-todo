@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.todo.messaging;
 
 import be.stijnhooft.portal.model.domain.Event;
+import be.stijnhooft.portal.todo.services.EventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -14,14 +15,17 @@ import java.util.List;
 @Slf4j
 public class EventTopicListener {
 
-    @Autowired
-    public EventTopicListener() {
+    private final EventService eventService;
 
+    @Autowired
+    public EventTopicListener(EventService eventService) {
+        this.eventService = eventService;
     }
 
     @StreamListener(EventTopic.INPUT)
-    public void log(List<Event> events) {
-        log.info("events coming in! {}", events);
+    public void receive(List<Event> events) {
+        log.info("Received events: " + events);
+        eventService.receiveEvents(events);
     }
 
 }

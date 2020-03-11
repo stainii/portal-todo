@@ -19,7 +19,6 @@ import java.time.Instant;
 import java.util.List;
 
 // TODO: find a way to write an integration test for server side events
-// TODO: document
 @RestController
 @RequestMapping("api/task/patch/")
 @Slf4j

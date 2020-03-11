@@ -121,9 +121,15 @@ An example:
 
 It doesn't matter in task patch A gets sent to the server before task patch B. Even if A arrives later than B, they will be (re)applied in order of their date.
 
+## Subscriptions
+When another module sends out an **event**, the todo module can automatically create a task based on that event.
+This is configurable in the front-end.
 
-### Release
-#### How to release
+For example: Housagotchi says that the house should be cleaned within a week. It sends out an event.
+A task is automatically created that should be finished next week.
+
+## Release
+### How to release
 To release a module, this project makes use of the JGitflow plugin and the Dockerfile-maven-plugin.
 
 1. Make sure all changes have been committed and pushed to Github.
@@ -137,7 +143,7 @@ To release a module, this project makes use of the JGitflow plugin and the Docke
 
 More information about the JGitflow plugin can be found [here](https://gist.github.com/lemiorhan/97b4f827c08aed58a9d8).
 
-##### Maven configuration
+#### Maven configuration
 At the moment, releases are made on a local machine. No Jenkins job has been made (yet).
 Therefore, make sure you have the following config in your Maven `settings.xml`;
 

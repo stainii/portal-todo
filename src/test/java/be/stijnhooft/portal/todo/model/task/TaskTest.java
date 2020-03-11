@@ -1,5 +1,6 @@
 package be.stijnhooft.portal.todo.model.task;
 
+import be.stijnhooft.portal.todo.model.Importance;
 import org.junit.Test;
 
 import java.time.LocalDateTime;

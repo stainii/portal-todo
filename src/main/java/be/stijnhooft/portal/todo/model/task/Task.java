@@ -1,5 +1,6 @@
 package be.stijnhooft.portal.todo.model.task;
 
+import be.stijnhooft.portal.todo.model.Importance;
 import be.stijnhooft.portal.todo.utils.DateTimeUtils;
 import lombok.*;
 import org.springframework.data.annotation.Id;

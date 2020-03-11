@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.todo.services;
 
 import be.stijnhooft.portal.todo.dtos.TaskTemplateEntry;
+import be.stijnhooft.portal.todo.mappers.TaskMapper;
 import be.stijnhooft.portal.todo.mappers.TaskPatchMapper;
 import be.stijnhooft.portal.todo.messaging.EventPublisher;
 import be.stijnhooft.portal.todo.model.task.Task;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,16 +30,16 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskPatchRepository taskPatchRepository;
-    private final TaskTemplateService taskTemplateService;
+    private final TaskMapper taskMapper;
     private final EventPublisher eventPublisher;
     private final TaskPatchMapper taskPatchMapper;
     private final Clock clock;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskPatchRepository taskPatchRepository, TaskTemplateService taskTemplateService, EventPublisher eventPublisher, TaskPatchMapper taskPatchMapper, Clock clock) {
+    public TaskService(TaskRepository taskRepository, TaskPatchRepository taskPatchRepository, TaskMapper taskMapper, EventPublisher eventPublisher, TaskPatchMapper taskPatchMapper, Clock clock) {
         this.taskRepository = taskRepository;
         this.taskPatchRepository = taskPatchRepository;
-        this.taskTemplateService = taskTemplateService;
+        this.taskMapper = taskMapper;
         this.eventPublisher = eventPublisher;
         this.taskPatchMapper = taskPatchMapper;
         this.clock = clock;
@@ -83,16 +85,21 @@ public class TaskService {
         return task;
     }
 
+    public List<Task> create(@NonNull Collection<Task> task) {
+        return task.stream()
+                .map(this::create)
+                .collect(Collectors.toList());
+    }
+
     public List<Task> createTasksBasedOn(@NonNull TaskTemplateEntry taskTemplateEntry) {
-        var tasks = taskTemplateService.toTasks(taskTemplateEntry);
+        var tasks = taskMapper.map(taskTemplateEntry);
         return tasks.stream()
                 .map(this::create)
                 .collect(Collectors.toList());
     }
 
-    public Task save(@NonNull Task task) {
+    public Task update(@NonNull Task task) {
         taskPatchRepository.saveAll(task.getHistory());
         return taskRepository.save(task);
     }
-
 }
