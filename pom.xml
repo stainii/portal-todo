@@ -90,7 +90,7 @@
         <dependency>
             <groupId>be.stijnhooft</groupId>
             <artifactId>portal-model</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
 
         <!-- test dependencies -->
