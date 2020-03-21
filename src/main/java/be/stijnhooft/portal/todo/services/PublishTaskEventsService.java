@@ -26,23 +26,23 @@ public class PublishTaskEventsService {
     }
 
     @EventListener
-    void onCreate(TaskCreated taskCreated) {
+    public void onCreate(TaskCreated taskCreated) {
         scheduleEvent(taskCreated.getTaskPatch());
     }
 
     @EventListener
-    void onReschedule(TaskRescheduled taskRescheduled) {
+    public void onReschedule(TaskRescheduled taskRescheduled) {
         cancelEvent(taskRescheduled.getTaskPatch());
         scheduleEvent(taskRescheduled.getTaskPatch());
     }
 
     @EventListener
-    void onCompleted(TaskCompleted taskCompleted) {
+    public void onCompleted(TaskCompleted taskCompleted) {
         cancelEvent(taskCompleted.getTaskPatch());
     }
 
     @EventListener
-    void onCancelled(TaskCancelled taskCancelled) {
+    public void onCancelled(TaskCancelled taskCancelled) {
         cancelEvent(taskCancelled.getTaskPatch());
     }
 

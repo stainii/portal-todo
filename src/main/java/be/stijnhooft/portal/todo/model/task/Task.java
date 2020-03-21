@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
+
 @Document
 @Data
 @NoArgsConstructor
@@ -23,6 +25,8 @@ public class Task {
 
     @Id
     private String id;
+
+    private String flowId;
 
     @NonNull
     private String name;
@@ -53,6 +57,14 @@ public class Task {
     @Setter(AccessLevel.PRIVATE)
     @DBRef
     private List<TaskPatch> history = new ArrayList<>();
+
+    public String getFlowId() {
+        if (flowId == null) {
+            return String.format("%s-%s", APPLICATION_NAME, id);
+        } else {
+            return flowId;
+        }
+    }
 
     @SuppressWarnings("Convert2MethodRef")
     public TaskPatchResult patch(TaskPatch taskPatch) {

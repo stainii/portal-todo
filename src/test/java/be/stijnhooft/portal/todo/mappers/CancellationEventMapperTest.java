@@ -26,6 +26,7 @@ public class CancellationEventMapperTest {
     public void mapWhenSuccess() {
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId("12");
+        taskPatch.setFlowId(APPLICATION_NAME + "-12");
 
         Event event = cancellationEventMapper.map(taskPatch);
         assertThat(event.getSource(), is(APPLICATION_NAME));

@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.todo.mappers;
 
 import be.stijnhooft.portal.model.domain.Event;
+import be.stijnhooft.portal.model.domain.FlowAction;
 import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.repositories.TaskRepository;
@@ -38,6 +39,6 @@ public class ScheduleEventMapper {
             data.put("dueDate", task.getDueDateTime().toString());
         }
 
-        return new Event(APPLICATION_NAME, APPLICATION_NAME + "-" + taskPatch.getTaskId(), LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault()), data);
+        return new Event(APPLICATION_NAME, taskPatch.getFlowId(), FlowAction.START, LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault()), data);
     }
 }

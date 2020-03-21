@@ -2,6 +2,7 @@ package be.stijnhooft.portal.todo.services;
 
 import be.stijnhooft.portal.model.domain.Event;
 import be.stijnhooft.portal.todo.dtos.FiringSubscription;
+import be.stijnhooft.portal.todo.dtos.Source;
 import be.stijnhooft.portal.todo.mappers.TaskMapper;
 import be.stijnhooft.portal.todo.mappers.TaskPatchMapper;
 import be.stijnhooft.portal.todo.model.task.Task;
@@ -44,20 +45,20 @@ public class EventService {
         List<TaskPatch> taskPatches = events.parallelStream()
                 .flatMap(subscriptionService::fireOnCompleteCondition)
                 .map(FiringSubscription::getEvent)
-                .map(taskPatchMapper::from)
+                .flatMap(event -> taskPatchMapper.mapToTaskPatchThatCompletesATask(event).stream())
                 .collect(Collectors.toList());
 
         if (taskPatches.isEmpty()) {
             log.info("Received events, but no cancellations were triggered.");
         } else {
-            taskPatches.forEach(taskPatchService::patch);
+            taskPatches.forEach(taskPatch -> taskPatchService.patch(taskPatch, Source.EVENT));
         }
     }
 
     private void createNewTasks(Collection<Event> events) {
         List<Task> tasks = events.parallelStream()
                 .flatMap(subscriptionService::fireOnCreationCondition)
-                .map(taskMapper::map)
+                .map(taskMapper::mapToNewTask)
                 .collect(Collectors.toList());
 
         if (tasks.isEmpty()) {

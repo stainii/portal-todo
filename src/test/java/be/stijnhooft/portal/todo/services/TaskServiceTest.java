@@ -70,20 +70,20 @@ public class TaskServiceTest {
         patch2.setTaskId(task2.getId());
         patch2.setDateTime(Instant.now());
 
-        doReturn(patch1).when(taskPatchMapper).from(task1);
-        doReturn(patch2).when(taskPatchMapper).from(task2);
+        doReturn(patch1).when(taskPatchMapper).mapToPatchThatCreatesATask(task1);
+        doReturn(patch2).when(taskPatchMapper).mapToPatchThatCreatesATask(task2);
 
         // act
         var createdTasks = taskService.create(List.of(task1, task2));
 
         // assert
         verify(taskRepository).save(task1);
-        verify(taskPatchMapper).from(task1);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task1);
         verify(taskPatchRepository).save(patch1);
         verify(eventPublisher).publishTaskCreated(patch1);
 
         verify(taskRepository).save(task2);
-        verify(taskPatchMapper).from(task2);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task2);
         verify(taskPatchRepository).save(patch2);
         verify(eventPublisher).publishTaskCreated(patch2);
 
@@ -103,14 +103,14 @@ public class TaskServiceTest {
         TaskPatch patch = new TaskPatch();
         patch.setDateTime(Instant.now());
 
-        doReturn(patch).when(taskPatchMapper).from(task);
+        doReturn(patch).when(taskPatchMapper).mapToPatchThatCreatesATask(task);
 
         // act
         Task createdTask = taskService.create(task);
 
         // assert
         verify(taskRepository).save(task);
-        verify(taskPatchMapper).from(task);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task);
         verify(taskPatchRepository).save(patch);
         verify(eventPublisher).publishTaskCreated(patch);
 
@@ -129,14 +129,14 @@ public class TaskServiceTest {
         TaskPatch patch = new TaskPatch();
         patch.setDateTime(Instant.now());
 
-        doReturn(patch).when(taskPatchMapper).from(task);
+        doReturn(patch).when(taskPatchMapper).mapToPatchThatCreatesATask(task);
 
         // act
         Task createdTask = taskService.create(task);
 
         // assert
         verify(taskRepository).save(task);
-        verify(taskPatchMapper).from(task);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task);
         verify(taskPatchRepository).save(patch);
         verify(eventPublisher).publishTaskCreated(patch);
 
@@ -157,16 +157,76 @@ public class TaskServiceTest {
         TaskPatch patch = new TaskPatch();
         patch.setDateTime(Instant.now());
 
-        doReturn(patch).when(taskPatchMapper).from(task);
+        doReturn(patch).when(taskPatchMapper).mapToPatchThatCreatesATask(task);
 
         // act
         Task createdTask = taskService.create(task);
 
         // assert
         verify(taskRepository).save(task);
-        verify(taskPatchMapper).from(task);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task);
         verify(taskPatchRepository).save(patch);
         verify(eventPublisher).publishTaskCreated(patch);
+
+        assertThat(createdTask.getStartDateTime(), is(equalTo(startDateTime)));
+        assertThat(createdTask.getStatus(), is(equalTo(status)));
+    }
+
+    @Test
+    public void createWhenNewTaskWhenTheFLowIdIsFromThisApplication() {
+        // arrange
+        LocalDateTime startDateTime = LocalDateTime.now();
+        TaskStatus status = TaskStatus.COMPLETED;
+
+        Task task = new Task();
+        task.setId(UUID.randomUUID().toString());
+        task.setStatus(status);
+        task.setStartDateTime(startDateTime);
+        task.setFlowId("Todo-100");
+
+        TaskPatch patch = new TaskPatch();
+        patch.setDateTime(Instant.now());
+
+        doReturn(patch).when(taskPatchMapper).mapToPatchThatCreatesATask(task);
+
+        // act
+        Task createdTask = taskService.create(task);
+
+        // assert
+        verify(taskRepository).save(task);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task);
+        verify(taskPatchRepository).save(patch);
+        verify(eventPublisher).publishTaskCreated(patch);
+
+        assertThat(createdTask.getStartDateTime(), is(equalTo(startDateTime)));
+        assertThat(createdTask.getStatus(), is(equalTo(status)));
+    }
+
+    @Test
+    public void createWhenNewTaskWhenTheFLowIdIsFromAnotherApplication() {
+        // arrange
+        LocalDateTime startDateTime = LocalDateTime.now();
+        TaskStatus status = TaskStatus.COMPLETED;
+
+        Task task = new Task();
+        task.setId(UUID.randomUUID().toString());
+        task.setStatus(status);
+        task.setStartDateTime(startDateTime);
+        task.setFlowId("Housagotchi-100");
+
+        TaskPatch patch = new TaskPatch();
+        patch.setDateTime(Instant.now());
+
+        doReturn(patch).when(taskPatchMapper).mapToPatchThatCreatesATask(task);
+
+        // act
+        Task createdTask = taskService.create(task);
+
+        // assert
+        verify(taskRepository).save(task);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task);
+        verify(taskPatchRepository).save(patch);
+        verify(eventPublisher, times(0)).publishTaskCreated(patch);
 
         assertThat(createdTask.getStartDateTime(), is(equalTo(startDateTime)));
         assertThat(createdTask.getStatus(), is(equalTo(status)));
@@ -181,14 +241,14 @@ public class TaskServiceTest {
         TaskPatch patch = new TaskPatch();
         patch.setDateTime(Instant.now());
 
-        doReturn(patch).when(taskPatchMapper).from(task);
+        doReturn(patch).when(taskPatchMapper).mapToPatchThatCreatesATask(task);
 
         // act
         Task createdTask = taskService.create(task);
 
         // assert
         verify(taskRepository).save(task);
-        verify(taskPatchMapper).from(task);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task);
         verify(taskPatchRepository).save(patch);
         verify(eventPublisher).publishTaskCreated(patch);
 
@@ -207,18 +267,18 @@ public class TaskServiceTest {
         TaskPatch patch = new TaskPatch();
         patch.setDateTime(Instant.now());
 
-        doReturn(Collections.singletonList(task)).when(taskMapper).map(taskTemplateEntry);
+        doReturn(Collections.singletonList(task)).when(taskMapper).mapToNewTask(taskTemplateEntry);
         doReturn(task).when(taskRepository).save(task);
-        doReturn(patch).when(taskPatchMapper).from(task);
+        doReturn(patch).when(taskPatchMapper).mapToPatchThatCreatesATask(task);
 
         // act
         taskService.createTasksBasedOn(taskTemplateEntry);
 
         // assert
-        verify(taskMapper).map(taskTemplateEntry);
+        verify(taskMapper).mapToNewTask(taskTemplateEntry);
         verify(eventPublisher).publishTaskCreated(patch);
         verify(taskRepository).save(task);
-        verify(taskPatchMapper).from(task);
+        verify(taskPatchMapper).mapToPatchThatCreatesATask(task);
         verify(taskPatchRepository).save(patch);
         verifyNoMoreInteractions(taskMapper, taskRepository, taskPatchRepository, eventPublisher);
     }

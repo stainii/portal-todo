@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.todo.mappers;
 
 import be.stijnhooft.portal.model.domain.Event;
+import be.stijnhooft.portal.model.domain.FlowAction;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,6 @@ public class CancellationEventMapper  {
         Map<String, String> data = new HashMap<>();
         data.put("type", "cancellation");
 
-        return new Event(APPLICATION_NAME, APPLICATION_NAME + "-" + taskPatch.getTaskId(), LocalDateTime.now(), data);
+        return new Event(APPLICATION_NAME, taskPatch.getFlowId(), FlowAction.END, LocalDateTime.now(), data);
     }
 }

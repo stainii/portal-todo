@@ -1,7 +1,7 @@
 package be.stijnhooft.portal.todo.services;
 
+import be.stijnhooft.portal.todo.dtos.Source;
 import be.stijnhooft.portal.todo.messaging.EventPublisher;
-import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskPatchResult;
 import be.stijnhooft.portal.todo.repositories.TaskPatchRepository;
@@ -33,8 +33,8 @@ public class TaskPatchService {
         return taskPatchRepository.findByDateTimeAfter(startDateTime);
     }
 
-    public TaskPatchResult patch(TaskPatch taskPatch) {
-        Task task = taskService.findById(taskPatch.getTaskId())
+    public TaskPatchResult patch(TaskPatch taskPatch, Source source) {
+        var task = taskService.findById(taskPatch.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Cannot find task with id " + taskPatch.getTaskId()));
 
         if (taskPatch.getId() == null) {
@@ -45,13 +45,15 @@ public class TaskPatchService {
             throw new IllegalArgumentException("Task patch with id " + taskPatch.getId() + " has not date time!");
         }
 
-        TaskPatchResult patchResult = task.patch(taskPatch);
+        var patchResult = task.patch(taskPatch);
 
         taskService.update(task);
 
-        publishTaskPatchedEvent(taskPatch);
-        publishEventWhenTaskHasBeenRescheduled(patchResult);
-        publishEventIfTaskHasBeenCompleted(patchResult);
+        if (source == Source.USER) {
+            publishTaskPatchedEvent(taskPatch);
+            publishEventWhenTaskHasBeenRescheduled(patchResult);
+            publishEventIfTaskHasBeenCompleted(patchResult);
+        }
 
         return patchResult;
     }

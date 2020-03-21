@@ -21,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
+import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -46,7 +47,6 @@ public class PublishTaskEventsServiceIntegrationTest {
     @Autowired
     private MessageCollector collector;
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void onCreate() {
@@ -55,12 +55,14 @@ public class PublishTaskEventsServiceIntegrationTest {
 
         var taskPatch = new TaskPatch();
         taskPatch.setTaskId("10");
+        taskPatch.setFlowId(APPLICATION_NAME + "-10");
         taskPatch.addChange("name", "name");
         taskPatch.addChange("dueDateTime", dueDateTime.toString());
         taskPatch.addChange("status", "OPEN");
 
         var task = new Task();
         task.setId("10");
+        task.setFlowId(APPLICATION_NAME + "-10");
         task.setName("name");
         task.setDueDateTime(LocalDateTime.of(2019, 5, 31, 10, 0));
         task.setStatus(TaskStatus.OPEN);
@@ -85,12 +87,14 @@ public class PublishTaskEventsServiceIntegrationTest {
         var taskPatch = new TaskPatch();
         taskPatch.setId(UUID.randomUUID().toString());
         taskPatch.setTaskId("10");
+        taskPatch.setFlowId(APPLICATION_NAME + "-10");
         taskPatch.setDateTime(Instant.now());
         taskPatch.addChange("name", "name");
         taskPatch.addChange("dueDateTime", "2019-05-31T10:00:00");
 
         var task = new Task();
         task.setId("10");
+        task.setFlowId(APPLICATION_NAME + "-10");
         task.setName("name");
         task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
         task.patch(taskPatch);
@@ -119,6 +123,7 @@ public class PublishTaskEventsServiceIntegrationTest {
 
         var taskPatch = new TaskPatch();
         taskPatch.setTaskId("10");
+        taskPatch.setFlowId(APPLICATION_NAME + "-10");
         taskPatch.addChange("name", "name");
         taskPatch.addChange("dueDateTime", dueDateTime.toString());
         taskPatch.addChange("status", "COMPLETED");
@@ -142,6 +147,7 @@ public class PublishTaskEventsServiceIntegrationTest {
 
         var taskPatch = new TaskPatch();
         taskPatch.setTaskId("10");
+        taskPatch.setFlowId(APPLICATION_NAME + "-10");
         taskPatch.addChange("name", "name");
         taskPatch.addChange("dueDateTime", dueDateTime.toString());
         taskPatch.addChange("status", "OPEN");

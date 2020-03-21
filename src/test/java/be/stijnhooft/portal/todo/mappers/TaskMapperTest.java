@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.todo.mappers;
 
 import be.stijnhooft.portal.model.domain.Event;
+import be.stijnhooft.portal.model.domain.FlowAction;
 import be.stijnhooft.portal.todo.dtos.FiringSubscription;
 import be.stijnhooft.portal.todo.dtos.TaskTemplateEntry;
 import be.stijnhooft.portal.todo.model.Importance;
@@ -34,7 +35,7 @@ public class TaskMapperTest {
     }
 
     @Test
-    public void mapTaskTemplateToTask() {
+    public void mapTaskTemplateToNewTask() {
         // arrange
         var taskTemplate = new TaskTemplate();
         taskTemplate.setName("Organize a workshop");
@@ -63,7 +64,7 @@ public class TaskMapperTest {
         var taskTemplateEntry = new TaskTemplateEntry(taskTemplate, variables, null, dueDateTimeOfMainTask);
 
         // act
-        var tasks = taskMapper.map(taskTemplateEntry);
+        var tasks = taskMapper.mapToNewTask(taskTemplateEntry);
 
         // assert
         assertThat(tasks, hasSize(2));
@@ -90,7 +91,7 @@ public class TaskMapperTest {
     }
 
     @Test
-    public void mapFiringSubscriptionToTaskWithMaximalData() {
+    public void mapFiringSubscriptionToNewTaskWithMaximalData() {
         // arrange
         var flowId = "flowId";
         var name = "my task";
@@ -100,16 +101,17 @@ public class TaskMapperTest {
         eventData.put("task", name);
         eventData.put("maxDueDate", dueDate.toString());
 
-        var event = new Event("Housagotchi", flowId, LocalDateTime.now(), eventData);
+        var event = new Event("Housagotchi", flowId, FlowAction.START, LocalDateTime.now(), eventData);
         var mappingToTask = new SubscriptionMappingToTask("data['task']", "''", "data['maxDueDate']", "'Personal'", "'IMPORTANT'");
         var subscription = new Subscription("subscriptionId", "'Housagotchi'", "'true'", "'false'", mappingToTask);
         var firingSubscription = new FiringSubscription(subscription, event);
 
         // act
-        var result = taskMapper.map(firingSubscription);
+        var result = taskMapper.mapToNewTask(firingSubscription);
 
         // assert
-        assertThat(result.getId(), is(flowId));
+        assertThat(result.getId(), is(notNullValue()));
+        assertThat(result.getFlowId(), is(flowId));
         assertThat(result.getName(), is(name));
         assertThat(result.getCreationDateTime(), is(notNullValue()));
         assertThat(result.getStartDateTime(), is(nullValue()));
@@ -123,7 +125,7 @@ public class TaskMapperTest {
     }
 
     @Test
-    public void mapFiringSubscriptionToTaskWithMinimalData() {
+    public void mapFiringSubscriptionToNewTaskWithMinimalData() {
         // arrange
         var flowId = "flowId";
         var name = "my task";
@@ -131,16 +133,17 @@ public class TaskMapperTest {
         var eventData = new HashMap<String, String>();
         eventData.put("task", name);
 
-        var event = new Event("Housagotchi", flowId, LocalDateTime.now(), eventData);
+        var event = new Event("Housagotchi", flowId, FlowAction.START, LocalDateTime.now(), eventData);
         var mappingToTask = new SubscriptionMappingToTask("data['task']", null, null, "'Personal'", null);
         var subscription = new Subscription("subscriptionId", "'Housagotchi'", "'true'", "'false'", mappingToTask);
         var firingSubscription = new FiringSubscription(subscription, event);
 
         // act
-        var result = taskMapper.map(firingSubscription);
+        var result = taskMapper.mapToNewTask(firingSubscription);
 
         // assert
-        assertThat(result.getId(), is(flowId));
+        assertThat(result.getId(), is(notNullValue()));
+        assertThat(result.getFlowId(), is(flowId));
         assertThat(result.getName(), is(name));
         assertThat(result.getCreationDateTime(), is(notNullValue()));
         assertThat(result.getStartDateTime(), is(nullValue()));

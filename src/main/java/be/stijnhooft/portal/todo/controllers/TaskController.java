@@ -1,5 +1,6 @@
 package be.stijnhooft.portal.todo.controllers;
 
+import be.stijnhooft.portal.todo.dtos.Source;
 import be.stijnhooft.portal.todo.dtos.TaskTemplateEntry;
 import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
@@ -57,8 +58,13 @@ public class TaskController {
      */
     @PatchMapping("/{id}")
     public TaskPatchResult patch(@RequestBody @Valid TaskPatch taskPatch, @PathVariable("id") String id) {
+        var task = taskService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Task %s not found.", id)));
+
         taskPatch.setTaskId(id);
-        return taskPatchService.patch(taskPatch);
+        taskPatch.setFlowId(task.getFlowId());
+
+        return taskPatchService.patch(taskPatch, Source.USER);
     }
 
 }

@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
+
 @Service
 @Slf4j
 @Transactional
@@ -74,13 +76,15 @@ public class TaskService {
         }
 
         // create the first patch of the task: the patch that defines its creation
-        TaskPatch createPatch = taskPatchMapper.from(task);
+        TaskPatch createPatch = taskPatchMapper.mapToPatchThatCreatesATask(task);
         task.patch(createPatch);
 
         taskPatchRepository.save(createPatch);
         taskRepository.save(task);
 
-        eventPublisher.publishTaskCreated(createPatch);
+        if (task.getFlowId().startsWith(APPLICATION_NAME)) {
+            eventPublisher.publishTaskCreated(createPatch);
+        }
 
         return task;
     }
@@ -92,7 +96,7 @@ public class TaskService {
     }
 
     public List<Task> createTasksBasedOn(@NonNull TaskTemplateEntry taskTemplateEntry) {
-        var tasks = taskMapper.map(taskTemplateEntry);
+        var tasks = taskMapper.mapToNewTask(taskTemplateEntry);
         return tasks.stream()
                 .map(this::create)
                 .collect(Collectors.toList());

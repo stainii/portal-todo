@@ -1,10 +1,12 @@
 package be.stijnhooft.portal.todo.mappers;
 
 import be.stijnhooft.portal.model.domain.Event;
+import be.stijnhooft.portal.model.domain.FlowAction;
 import be.stijnhooft.portal.todo.model.Importance;
 import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
+import be.stijnhooft.portal.todo.repositories.TaskRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,22 +15,27 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 public class TaskPatchMapperTest {
 
     private Clock clock = Clock.fixed(ZonedDateTime.of(2019, 11, 20, 10, 0, 0, 0, ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
     private TaskPatchMapper taskPatchMapper;
+    private TaskRepository taskRepository;
 
     @Before
     public void init() {
-        taskPatchMapper = new TaskPatchMapper(clock);
+        taskRepository = mock(TaskRepository.class);
+        taskPatchMapper = new TaskPatchMapper(clock, taskRepository);
     }
 
     @Test
-    public void fromTask() {
+    public void mapToPatchThatCreatesATask() {
         var task = new Task();
         task.setId("100");
         task.setStatus(TaskStatus.OPEN);
@@ -42,7 +49,7 @@ public class TaskPatchMapperTest {
         task.setCreationDateTime(ZonedDateTime.of(2019, 9, 8, 7, 6, 0, 0, ZoneId.of("UTC")).toInstant());
         task.getHistory().add(new TaskPatch());
 
-        var taskPatch = taskPatchMapper.from(task);
+        var taskPatch = taskPatchMapper.mapToPatchThatCreatesATask(task);
 
         assertThat(taskPatch.getId(), is(notNullValue()));
         assertThat(taskPatch.getDateTime(), is(ZonedDateTime.of(2019, 9, 8, 7, 6, 0, 0, ZoneId.of("UTC")).toInstant()));
@@ -57,19 +64,53 @@ public class TaskPatchMapperTest {
         assertThat(taskPatch.getChange("name"), is("name"));
         assertThat(taskPatch.getChange("creationDateTime"), is("2019-09-08T07:06:00Z"));
         assertThat(taskPatch.getChange("history"), is(nullValue()));
+
+        verifyNoInteractions(taskRepository);
     }
 
     @Test
-    public void fromEvent() {
-        var event = new Event("Housagotchi", "Housagotchi-100", LocalDateTime.now(), new HashMap<>());
+    public void mapToTaskPatchThatCompletesATask() {
+        // arrange
+        var taskId = "1234567890";
+        var flowId = "Housagotchi-100";
 
-        var taskPatch = taskPatchMapper.from(event);
+        var event = new Event("Housagotchi", flowId, FlowAction.END, LocalDateTime.now(), new HashMap<>());
 
+        var task = new Task();
+        task.setId(taskId);
+        task.setFlowId(flowId);
+
+        doReturn(Optional.of(task)).when(taskRepository).findFirstByFlowIdOrderByCreationDateTimeDesc(flowId);
+
+        // act
+        var taskPatch = taskPatchMapper.mapToTaskPatchThatCompletesATask(event).get();
+
+        // assert
         assertThat(taskPatch.getId(), is(notNullValue()));
         assertThat(taskPatch.getDateTime(), is(clock.instant()));
-        assertThat(taskPatch.getTaskId(), is("Housagotchi-100"));
+        assertThat(taskPatch.getTaskId(), is(taskId));
+        assertThat(taskPatch.getFlowId(), is(flowId));
         assertThat(taskPatch.getChange("status"), is(TaskStatus.COMPLETED.name()));
         assertThat(taskPatch.getChange("history"), is(nullValue()));
+
+        verify(taskRepository).findFirstByFlowIdOrderByCreationDateTimeDesc(flowId);
+    }
+
+    @Test
+    public void mapToTaskPatchThatCompletesATaskWhenNoTaskExistsForTheGivenFlowId() {
+        // arrange
+        var flowId = "Housagotchi-100";
+
+        var event = new Event("Housagotchi", flowId, FlowAction.END, LocalDateTime.now(), new HashMap<>());
+
+        doReturn(Optional.empty()).when(taskRepository).findFirstByFlowIdOrderByCreationDateTimeDesc(flowId);
+
+        // act
+        var taskPatch = taskPatchMapper.mapToTaskPatchThatCompletesATask(event);
+
+        // assert
+        assertTrue(taskPatch.isEmpty());
+        verify(taskRepository).findFirstByFlowIdOrderByCreationDateTimeDesc(flowId);
     }
 
 }
