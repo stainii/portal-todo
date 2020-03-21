@@ -7,10 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends MongoRepository<Task, String> {
 
     List<Task> findByStartDateTimeLessThanAndStatus(LocalDateTime startDateTime, TaskStatus status);
 
+    Optional<Task> findFirstByFlowIdOrderByCreationDateTimeDesc(String flowId);
 }

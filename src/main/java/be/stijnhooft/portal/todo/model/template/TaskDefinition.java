@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.todo.model.template;
 
-import be.stijnhooft.portal.todo.model.task.Importance;
+import be.stijnhooft.portal.todo.model.Importance;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

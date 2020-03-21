@@ -48,10 +48,12 @@ public class ScheduleEventMapperTest {
         // arrange
         Task task = new Task();
         task.setId("12");
+        task.setFlowId(APPLICATION_NAME + "-12");
         task.setName("test name");
 
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId("12");
+        taskPatch.setFlowId(APPLICATION_NAME + "-12");
         taskPatch.addChange("name", "test name");
 
         doReturn(Optional.of(task)).when(taskRepository).findById("12");
@@ -78,11 +80,13 @@ public class ScheduleEventMapperTest {
         // arrange
         Task task = new Task();
         task.setId("12");
+        task.setFlowId(APPLICATION_NAME + "-12");
         task.setName("test name");
         task.setDueDateTime(LocalDateTime.of(2019, 6, 7, 10, 12, 13));
 
         TaskPatch taskPatch = new TaskPatch();
         taskPatch.setTaskId("12");
+        taskPatch.setFlowId(APPLICATION_NAME + "-12");
         taskPatch.addChange("name", "test name");
 
         doReturn(Optional.of(task)).when(taskRepository).findById("12");

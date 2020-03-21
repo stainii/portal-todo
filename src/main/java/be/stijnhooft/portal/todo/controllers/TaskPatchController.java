@@ -19,9 +19,8 @@ import java.time.Instant;
 import java.util.List;
 
 // TODO: find a way to write an integration test for server side events
-// TODO: document
 @RestController
-@RequestMapping("/task/patch/")
+@RequestMapping("api/task/patch/")
 @Slf4j
 public class TaskPatchController {
 
@@ -35,7 +34,7 @@ public class TaskPatchController {
         this.securityService = securityService;
     }
 
-    @GetMapping(path = "/", params = "since")
+    @GetMapping(params = "since")
     public List<TaskPatch> getAllTaskPatchesSince(@RequestParam("since") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDateTime) {
         return taskPatchService.findAllTaskPatchesSince(startDateTime);
     }
@@ -52,7 +51,7 @@ public class TaskPatchController {
      * @param jwtToken jwtToken of logged in user
      * @return sse emitter
      */
-    @GetMapping(path = "/", params = "tail")
+    @GetMapping(params = "tail")
     public ResponseEntity<SseEmitter> tail(@RequestParam("jwt") String jwtToken) {
         try {
             securityService.validateJtwToken(jwtToken);

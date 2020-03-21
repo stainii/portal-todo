@@ -1,11 +1,13 @@
 package be.stijnhooft.portal.todo.model.task;
 
+import be.stijnhooft.portal.todo.model.Importance;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
@@ -15,9 +17,11 @@ public class TaskTest {
     @Test
     public void patchWhenThereIsNothingToPatch() {
         TaskPatch taskPatch = new TaskPatch();
+        taskPatch.setFlowId(APPLICATION_NAME + "-12");
         taskPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
 
         Task task = new Task();
+        task.setFlowId(APPLICATION_NAME + "-12");
         task.setName("original");
         task.setStatus(TaskStatus.OPEN);
         task.setDescription("original");

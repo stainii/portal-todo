@@ -1,5 +1,7 @@
 package be.stijnhooft.portal.todo.model.task;
 
+import be.stijnhooft.portal.todo.model.Importance;
+import be.stijnhooft.portal.todo.utils.DateTimeUtils;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
+
 @Document
 @Data
 @NoArgsConstructor
@@ -21,6 +25,8 @@ public class Task {
 
     @Id
     private String id;
+
+    private String flowId;
 
     @NonNull
     private String name;
@@ -52,6 +58,14 @@ public class Task {
     @DBRef
     private List<TaskPatch> history = new ArrayList<>();
 
+    public String getFlowId() {
+        if (flowId == null) {
+            return String.format("%s-%s", APPLICATION_NAME, id);
+        } else {
+            return flowId;
+        }
+    }
+
     @SuppressWarnings("Convert2MethodRef")
     public TaskPatchResult patch(TaskPatch taskPatch) {
         TaskStatus statusBeforePatch = this.getStatus();
@@ -59,8 +73,8 @@ public class Task {
 
         // apply patch
         patchIfNeeded(taskPatch, "name", newValue -> this.setName(newValue));
-        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
-        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(newValue == null ? null : LocalDateTime.parse(newValue)));
+        patchIfNeeded(taskPatch, "startDateTime", newValue -> this.setStartDateTime(DateTimeUtils.parseAsLocalDateTime(newValue)));
+        patchIfNeeded(taskPatch, "dueDateTime", newValue -> this.setDueDateTime(DateTimeUtils.parseAsLocalDateTime(newValue)));
         patchIfNeeded(taskPatch, "expectedDurationInHours", newValue -> this.setExpectedDurationInHours(newValue == null ? null : Integer.parseInt(newValue)));
         patchIfNeeded(taskPatch, "context", newValue -> this.setContext(newValue));
         patchIfNeeded(taskPatch, "importance", newValue -> this.setImportance(newValue == null ? null : Importance.valueOf(newValue)));

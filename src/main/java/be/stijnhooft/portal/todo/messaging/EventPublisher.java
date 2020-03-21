@@ -34,7 +34,7 @@ public class EventPublisher {
     public void publishEvent(Collection<Event> events) {
         log.info("Sending events to the Event topic");
         log.debug(events.toString());
-        eventTopic.eventTopic().send(MessageBuilder.withPayload(events).build());
+        eventTopic.writeToEventTopic().send(MessageBuilder.withPayload(events).build());
     }
 
     public void publishTaskCompleted(TaskPatch taskPatch) {
