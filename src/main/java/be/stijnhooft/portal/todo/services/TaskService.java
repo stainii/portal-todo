@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
@@ -48,8 +47,7 @@ public class TaskService {
     }
 
     public List<Task> findAllActiveTasks() {
-        LocalDateTime now = LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault());
-        return taskRepository.findByStartDateTimeLessThanAndStatus(now, TaskStatus.OPEN);
+        return taskRepository.findByStatus(TaskStatus.OPEN);
     }
 
     public Optional<Task> findById(@NonNull String id) {
