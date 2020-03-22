@@ -22,8 +22,7 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.receivesPayloadThat;
 
@@ -82,7 +81,7 @@ public class PublishTaskEventsServiceIntegrationTest {
     }
 
     @Test
-    public void onReschedule() {
+    public void onRescheduleATaskMadeInThisApplication() {
         // arrange
         var taskPatch = new TaskPatch();
         taskPatch.setId(UUID.randomUUID().toString());
@@ -114,6 +113,33 @@ public class PublishTaskEventsServiceIntegrationTest {
                 containsString("\"source\":\"Todo\""),
                 containsString("\"flowId\":\"Todo-10\""),
                 containsString("\"data\":{\"task\":\"name\",\"dueDate\":\"2019-05-31T10:00\",\"type\":\"schedule\"}"))));
+    }
+
+    @Test
+    public void onRescheduleATaskMadeInAnotherApplication() {
+        // arrange
+        var taskPatch = new TaskPatch();
+        taskPatch.setId(UUID.randomUUID().toString());
+        taskPatch.setTaskId("10");
+        taskPatch.setFlowId("Housagotchi-10");
+        taskPatch.setDateTime(Instant.now());
+        taskPatch.addChange("name", "name");
+        taskPatch.addChange("dueDateTime", "2019-05-31T10:00:00");
+
+        var task = new Task();
+        task.setId("10");
+        task.setFlowId(APPLICATION_NAME + "-10");
+        task.setName("name");
+        task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
+        task.patch(taskPatch);
+        taskService.update(task);
+
+        // act: fire event, that should get picked up by the TaskEventPublisher
+        eventPublisher.publishTaskRescheduled(taskPatch);
+
+        // assert
+        BlockingQueue<Message<?>> messages = collector.forChannel(eventTopic.writeToEventTopic());
+        assertThat(messages, hasSize(0));
     }
 
     @Test

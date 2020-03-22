@@ -12,6 +12,8 @@ import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
+
 @Service
 public class PublishTaskEventsService {
 
@@ -32,8 +34,10 @@ public class PublishTaskEventsService {
 
     @EventListener
     public void onReschedule(TaskRescheduled taskRescheduled) {
-        cancelEvent(taskRescheduled.getTaskPatch());
-        scheduleEvent(taskRescheduled.getTaskPatch());
+        if (taskRescheduled.getTaskPatch().getFlowId().startsWith(APPLICATION_NAME)) {
+            cancelEvent(taskRescheduled.getTaskPatch());
+            scheduleEvent(taskRescheduled.getTaskPatch());
+        }
     }
 
     @EventListener
