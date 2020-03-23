@@ -6,6 +6,7 @@ import be.stijnhooft.portal.todo.model.Importance;
 import be.stijnhooft.portal.todo.model.subscription.SubscriptionMappingToTask;
 import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
+import be.stijnhooft.portal.todo.model.template.DeviationBase;
 import be.stijnhooft.portal.todo.model.template.TaskTemplate;
 import be.stijnhooft.portal.todo.utils.DateTimeUtils;
 import lombok.NonNull;
@@ -19,6 +20,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -107,9 +109,9 @@ public class TaskMapper {
                             .orElse(null);
 
                     // calculate dates
-                    var startDateTime = addDaysTo(startDateTimeOfMainTask, taskDefinition.getDeviationOfTheMainTaskStartDateTimeInDays())
+                    var startDateTime = calculateDateWithDeviation(taskDefinition.getStartDateDeviationDays(), taskDefinition.getStartDateDeviationBase(), startDateTimeOfMainTask, dueDateTimeOfMainTask)
                             .orElse(null);
-                    var dueDateTime = addDaysTo(dueDateTimeOfMainTask, taskDefinition.getDeviationOfTheMainTaskDueDateTimeInDays())
+                    var dueDateTime = calculateDateWithDeviation(taskDefinition.getDueDateDeviationDays(), taskDefinition.getDueDateDeviationBase(), startDateTimeOfMainTask, dueDateTimeOfMainTask)
                             .orElse(null);
 
                     // other variables
@@ -124,6 +126,16 @@ public class TaskMapper {
                             description, TaskStatus.OPEN, null);
                 })
                 .collect(Collectors.toList());
+    }
+
+    private Optional<LocalDateTime> calculateDateWithDeviation(Integer deviationDays, DeviationBase deviationBase, LocalDateTime startDateTimeOfMainTask, LocalDateTime dueDateTimeOfMainTask) {
+        if (deviationBase == null) {
+            return Optional.empty();
+        }
+        return switch (deviationBase) {
+            case START_DATE -> addDaysTo(startDateTimeOfMainTask, deviationDays);
+            case DUE_DATE -> addDaysTo(dueDateTimeOfMainTask, deviationDays);
+        };
     }
 
 }

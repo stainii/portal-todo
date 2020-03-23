@@ -8,6 +8,7 @@ import be.stijnhooft.portal.todo.model.Importance;
 import be.stijnhooft.portal.todo.model.subscription.Subscription;
 import be.stijnhooft.portal.todo.model.subscription.SubscriptionMappingToTask;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
+import be.stijnhooft.portal.todo.model.template.DeviationBase;
 import be.stijnhooft.portal.todo.model.template.TaskDefinition;
 import be.stijnhooft.portal.todo.model.template.TaskTemplate;
 import org.junit.Before;
@@ -19,6 +20,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
@@ -35,7 +37,7 @@ public class TaskMapperTest {
     }
 
     @Test
-    public void mapTaskTemplateToNewTask() {
+    public void mapTaskTemplateToNewTaskWhenTaskTemplateEntryHasNoStartDate() {
         // arrange
         var taskTemplate = new TaskTemplate();
         taskTemplate.setName("Organize a workshop");
@@ -43,8 +45,10 @@ public class TaskMapperTest {
 
         var taskDefinition1 = new TaskDefinition();
         taskDefinition1.setName("Ask speaker for a workshop about ${subject} at ${school}");
-        taskDefinition1.setDeviationOfTheMainTaskStartDateTimeInDays(0);
-        taskDefinition1.setDeviationOfTheMainTaskDueDateTimeInDays(5);
+        taskDefinition1.setStartDateDeviationDays(0);
+        taskDefinition1.setStartDateDeviationBase(DeviationBase.START_DATE);
+        taskDefinition1.setDueDateDeviationDays(5);
+        taskDefinition1.setDueDateDeviationBase(DeviationBase.DUE_DATE);
         taskDefinition1.setContext("School coordination");
         taskDefinition1.setImportance(Importance.VERY_IMPORTANT);
 
@@ -53,7 +57,16 @@ public class TaskMapperTest {
         taskDefinition2.setContext("School coordination");
         taskDefinition2.setImportance(Importance.NOT_SO_IMPORTANT);
 
-        taskTemplate.setTaskDefinitions(Arrays.asList(taskDefinition1, taskDefinition2));
+        var taskDefinition3 = new TaskDefinition();
+        taskDefinition3.setName("Follow up");
+        taskDefinition3.setContext("School coordination");
+        taskDefinition3.setStartDateDeviationDays(1);
+        taskDefinition3.setStartDateDeviationBase(DeviationBase.DUE_DATE);
+        taskDefinition3.setDueDateDeviationDays(6);
+        taskDefinition3.setDueDateDeviationBase(DeviationBase.DUE_DATE);
+        taskDefinition3.setImportance(Importance.NOT_SO_IMPORTANT);
+
+        taskTemplate.setTaskDefinitions(List.of(taskDefinition1, taskDefinition2, taskDefinition3));
 
         Map<String, String> variables = new HashMap<>();
         variables.put("subject", "Git");
@@ -67,7 +80,7 @@ public class TaskMapperTest {
         var tasks = taskMapper.mapToNewTask(taskTemplateEntry);
 
         // assert
-        assertThat(tasks, hasSize(2));
+        assertThat(tasks, hasSize(3));
 
         var task1 = tasks.get(0);
         assertThat(task1.getId(), is(notNullValue()));
@@ -88,6 +101,94 @@ public class TaskMapperTest {
         assertThat(task2.getContext(), is("School coordination"));
         assertThat(task2.getImportance(), is(Importance.NOT_SO_IMPORTANT));
         assertThat(task2.getDescription(), is(nullValue()));
+
+        var task3 = tasks.get(2);
+        assertThat(task3.getId(), is(notNullValue()));
+        assertThat(task3.getName(), is("Follow up"));
+        assertThat(task3.getStartDateTime(), is(LocalDateTime.of(2019, 4, 22, 12, 0)));
+        assertThat(task3.getDueDateTime(), is(LocalDateTime.of(2019, 4, 27, 12, 0)));
+        assertThat(task3.getExpectedDurationInHours(), is(nullValue()));
+        assertThat(task3.getContext(), is("School coordination"));
+        assertThat(task3.getImportance(), is(Importance.NOT_SO_IMPORTANT));
+        assertThat(task3.getDescription(), is(nullValue()));
+    }
+
+    @Test
+    public void mapTaskTemplateToNewTaskWhenTaskTemplateEntryHasNoAStartDate() {
+        // arrange
+        var taskTemplate = new TaskTemplate();
+        taskTemplate.setName("Organize a workshop");
+        taskTemplate.setVariableNames(Arrays.asList("subject", "school", "speakers"));
+
+        var taskDefinition1 = new TaskDefinition();
+        taskDefinition1.setName("Ask speaker for a workshop about ${subject} at ${school}");
+        taskDefinition1.setStartDateDeviationDays(0);
+        taskDefinition1.setStartDateDeviationBase(DeviationBase.START_DATE);
+        taskDefinition1.setDueDateDeviationDays(5);
+        taskDefinition1.setDueDateDeviationBase(DeviationBase.DUE_DATE);
+        taskDefinition1.setContext("School coordination");
+        taskDefinition1.setImportance(Importance.VERY_IMPORTANT);
+
+        var taskDefinition2 = new TaskDefinition();
+        taskDefinition2.setName("Ask speakers to pick up goodies");
+        taskDefinition2.setContext("School coordination");
+        taskDefinition2.setImportance(Importance.NOT_SO_IMPORTANT);
+
+        var taskDefinition3 = new TaskDefinition();
+        taskDefinition3.setName("Follow up");
+        taskDefinition3.setContext("School coordination");
+        taskDefinition3.setStartDateDeviationDays(1);
+        taskDefinition3.setStartDateDeviationBase(DeviationBase.DUE_DATE);
+        taskDefinition3.setDueDateDeviationDays(6);
+        taskDefinition3.setDueDateDeviationBase(DeviationBase.DUE_DATE);
+        taskDefinition3.setImportance(Importance.NOT_SO_IMPORTANT);
+
+        taskTemplate.setTaskDefinitions(List.of(taskDefinition1, taskDefinition2, taskDefinition3));
+
+        Map<String, String> variables = new HashMap<>();
+        variables.put("subject", "Git");
+        variables.put("school", "Hogeschool Gent");
+        variables.put("speakers", "Reinout Claeys, Gert Keldermans");
+
+        var startDateTimeOfMainTask = LocalDateTime.of(2019, 4, 1, 12, 0);
+        var dueDateTimeOfMainTask = LocalDateTime.of(2019, 4, 21, 12, 0);
+        var taskTemplateEntry = new TaskTemplateEntry(taskTemplate, variables, startDateTimeOfMainTask, dueDateTimeOfMainTask);
+
+        // act
+        var tasks = taskMapper.mapToNewTask(taskTemplateEntry);
+
+        // assert
+        assertThat(tasks, hasSize(3));
+
+        var task1 = tasks.get(0);
+        assertThat(task1.getId(), is(notNullValue()));
+        assertThat(task1.getName(), is("Ask speaker for a workshop about Git at Hogeschool Gent"));
+        assertThat(task1.getStartDateTime(), is(LocalDateTime.of(2019, 4, 1, 12, 0)));
+        assertThat(task1.getDueDateTime(), is(LocalDateTime.of(2019, 4, 26, 12, 0)));
+        assertThat(task1.getExpectedDurationInHours(), is(nullValue()));
+        assertThat(task1.getContext(), is("School coordination"));
+        assertThat(task1.getImportance(), is(Importance.VERY_IMPORTANT));
+        assertThat(task1.getDescription(), is(nullValue()));
+
+        var task2 = tasks.get(1);
+        assertThat(task2.getId(), is(notNullValue()));
+        assertThat(task2.getName(), is("Ask speakers to pick up goodies"));
+        assertThat(task2.getStartDateTime(), is(nullValue()));
+        assertThat(task2.getDueDateTime(), is(nullValue()));
+        assertThat(task2.getExpectedDurationInHours(), is(nullValue()));
+        assertThat(task2.getContext(), is("School coordination"));
+        assertThat(task2.getImportance(), is(Importance.NOT_SO_IMPORTANT));
+        assertThat(task2.getDescription(), is(nullValue()));
+
+        var task3 = tasks.get(2);
+        assertThat(task3.getId(), is(notNullValue()));
+        assertThat(task3.getName(), is("Follow up"));
+        assertThat(task3.getStartDateTime(), is(LocalDateTime.of(2019, 4, 22, 12, 0)));
+        assertThat(task3.getDueDateTime(), is(LocalDateTime.of(2019, 4, 27, 12, 0)));
+        assertThat(task3.getExpectedDurationInHours(), is(nullValue()));
+        assertThat(task3.getContext(), is("School coordination"));
+        assertThat(task3.getImportance(), is(Importance.NOT_SO_IMPORTANT));
+        assertThat(task3.getDescription(), is(nullValue()));
     }
 
     @Test

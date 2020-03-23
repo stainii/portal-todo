@@ -14,7 +14,7 @@ import java.util.List;
  * A template that can be used to create tasks ({@link Task}).
  * This is useful if the creation of a multiple tasks, related to one goal.
  *
- * A template consists of one or more task definitions. For each task definition, one tak will be created.
+ * A template consists of one or more task definitions. For each task definition, one task will be created.
  * The task definitions describes what its task should look like.
  *
  * When a user wants to create tasks based on a task template, he or she needs to provide
