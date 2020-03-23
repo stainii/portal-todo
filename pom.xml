@@ -40,7 +40,7 @@
     </ciManagement>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>14</java.version>
         <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
 
         <!-- default parameters used in the application. Override these with a Maven profile -->

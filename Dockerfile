@@ -1,4 +1,4 @@
-FROM openjdk:11.0.1-jdk-sid
+FROM openjdk:14-jdk
 VOLUME /tmp
 EXPOSE 2007
 ARG JAR_FILE
