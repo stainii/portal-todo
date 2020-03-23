@@ -39,8 +39,5 @@ pipeline {
               to: '$DEFAULT_RECIPIENTS'
       }
     }
-    always {
-        cleanWs()
-    }
   }
 }
