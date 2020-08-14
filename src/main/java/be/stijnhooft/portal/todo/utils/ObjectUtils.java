@@ -4,27 +4,9 @@ import be.stijnhooft.portal.todo.model.task.Task;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ObjectUtils {
-
-    @SneakyThrows
-    public static <T> T patch(T oldVersion, T newVersion) {
-        for (Field field : Task.class.getDeclaredFields()) {
-            boolean wasAccessible = field.canAccess(newVersion);
-            field.setAccessible(true);
-
-            Object valueInNewVersion = field.get(newVersion);
-            if (valueInNewVersion != null) {
-                field.set(oldVersion, valueInNewVersion);
-            }
-
-            field.setAccessible(wasAccessible);
-        }
-
-        return oldVersion;
-    }
 
     @SneakyThrows
     public static Map<String, String> getAllFieldsAndTheirValues(Object object) {
@@ -45,4 +27,7 @@ public class ObjectUtils {
         return allFieldsAndTheirValues;
     }
 
+    public static boolean notEqual(Object object1, Object object2) {
+        return org.apache.commons.lang.ObjectUtils.notEqual(object1, object2);
+    }
 }

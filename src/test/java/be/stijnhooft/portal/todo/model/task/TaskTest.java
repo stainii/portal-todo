@@ -1,18 +1,21 @@
 package be.stijnhooft.portal.todo.model.task;
 
 import be.stijnhooft.portal.todo.model.Importance;
-import org.junit.Test;
+import be.stijnhooft.portal.todo.utils.ObjectUtils;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Map;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-public class TaskTest {
+class TaskTest {
 
     @Test
     public void patchWhenThereIsNothingToPatch() {
@@ -325,4 +328,102 @@ public class TaskTest {
         assertThat(patch.getTask(), is(sameInstance(task)));
     }
 
+    @Test
+    public void undoPatch() {
+        // arrange
+        Task task = new Task();
+        task.setName("original");
+        task.setStatus(TaskStatus.OPEN);
+        task.setDescription("original");
+        task.setContext("original");
+        task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
+        task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
+        task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
+        task.setFlowId("Housagotchi-100");
+
+        TaskPatch taskPatch1 = new TaskPatch();
+        taskPatch1.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
+        Map<String, String> changes = ObjectUtils.getAllFieldsAndTheirValues(task);
+        changes.remove("history");
+        taskPatch1.setChanges(changes);
+
+        TaskPatch taskPatch2 = new TaskPatch();
+        taskPatch2.setDateTime(ZonedDateTime.of(2019, 1, 2, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
+        taskPatch2.addChange("dueDateTime", "2019-03-03T03:03:03");
+        taskPatch2.addChange("description", "new description");
+        taskPatch2.addChange("importance", "NOT_SO_IMPORTANT");
+        taskPatch2.addChange("expectedDurationInHours", "10");
+
+
+        TaskPatch taskPatch3 = new TaskPatch();
+        taskPatch3.setDateTime(ZonedDateTime.of(2019, 1, 3, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
+        taskPatch3.addChange("dueDateTime", "2019-04-04T04:04:04");
+        taskPatch3.addChange("importance", "IMPORTANT");
+
+        TaskPatch taskPatch4 = new TaskPatch();
+        taskPatch4.setDateTime(ZonedDateTime.of(2019, 1, 4, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
+        taskPatch4.addChange("importance", "NOT_SO_IMPORTANT");
+
+        task.patch(taskPatch1);
+        task.patch(taskPatch2);
+        task.patch(taskPatch3);
+        task.patch(taskPatch4);
+
+        // act
+        TaskPatchResult taskPatchResult = task.undoPatch(taskPatch2);
+
+        // assert
+        assertThat(taskPatchResult.getTask(), is(equalTo(task)));
+        assertThat(taskPatchResult.getTaskPatch().getDateTime(), is(notNullValue()));
+        assertThat(taskPatchResult.getTaskPatch().getFlowId(), is(equalTo(task.getFlowId())));
+        assertThat(taskPatchResult.getTaskPatch().getTaskId(), is(equalTo(task.getId())));
+        assertThat(taskPatchResult.getTaskPatch().getChange("dueDateTime"), is(equalTo("2019-04-04T04:04:04")));
+        assertThat(taskPatchResult.getTaskPatch().getChange("description"), is(equalTo("original")));
+        assertThat(taskPatchResult.getTaskPatch().getChange("expectedDurationInHours"), is(nullValue()));
+        assertThat(taskPatchResult.getTaskPatch().getChanges().size(), is(equalTo(3)));
+    }
+
+    @Test
+    public void undoPatchWhenUndoingCreation() {
+        // arrange
+        Task task = new Task();
+        task.setName("original");
+        task.setStatus(TaskStatus.OPEN);
+        task.setDescription("original");
+        task.setContext("original");
+        task.setStartDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
+        task.setDueDateTime(LocalDateTime.of(2019, 1, 1, 1, 1));
+        task.setImportance(Importance.I_DO_NOT_REALLY_CARE);
+        task.setFlowId("Housagotchi-100");
+
+        TaskPatch creationPatch = new TaskPatch();
+        creationPatch.setDateTime(ZonedDateTime.of(2019, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()).toInstant());
+        Map<String, String> changes = ObjectUtils.getAllFieldsAndTheirValues(task);
+        changes.remove("history");
+        creationPatch.setChanges(changes);
+
+        task.getHistory().clear();
+        task.getHistory().add(creationPatch);
+
+        // act
+        TaskPatchResult taskPatchResult = task.undoPatch(creationPatch);
+
+        // assert
+        assertThat(task.getStatus(), is(TaskStatus.COMPLETED));
+
+        assertThat(task.getHistory(), hasSize(2));
+        assertThat(task.getHistory().get(1).getDateTime(), is(notNullValue()));
+        assertThat(task.getHistory().get(1).getFlowId(), is(equalTo(task.getFlowId())));
+        assertThat(task.getHistory().get(1).getTaskId(), is(equalTo(task.getId())));
+        assertThat(task.getHistory().get(1).getChange("status"), is(equalTo("COMPLETED")));
+        assertThat(task.getHistory().get(1).getChanges().size(), is(equalTo(1)));
+
+        assertThat(taskPatchResult.getTask(), is(equalTo(task)));
+        assertThat(taskPatchResult.getTaskPatch().getDateTime(), is(notNullValue()));
+        assertThat(taskPatchResult.getTaskPatch().getFlowId(), is(equalTo(task.getFlowId())));
+        assertThat(taskPatchResult.getTaskPatch().getTaskId(), is(equalTo(task.getId())));
+        assertThat(taskPatchResult.getTaskPatch().getChange("status"), is(equalTo("COMPLETED")));
+        assertThat(taskPatchResult.getTaskPatch().getChanges().size(), is(equalTo(1)));
+
+    }
 }

@@ -104,4 +104,5 @@ public class TaskService {
         taskPatchRepository.saveAll(task.getHistory());
         return taskRepository.save(task);
     }
+
 }

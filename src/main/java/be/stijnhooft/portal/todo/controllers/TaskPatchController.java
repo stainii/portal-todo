@@ -1,6 +1,8 @@
 package be.stijnhooft.portal.todo.controllers;
 
+import be.stijnhooft.portal.todo.exceptions.TaskNotFoundException;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
+import be.stijnhooft.portal.todo.model.task.TaskPatchResult;
 import be.stijnhooft.portal.todo.services.SecurityService;
 import be.stijnhooft.portal.todo.services.TaskPatchService;
 import be.stijnhooft.portal.todo.services.TaskPatchSseEmitterService;
@@ -9,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.Instant;
@@ -63,5 +62,13 @@ public class TaskPatchController {
 
         return ResponseEntity.ok(taskPatchSseEmitterService.registerListener());
     }
+
+    @DeleteMapping("/{id}")
+    public TaskPatchResult undoPatch(@PathVariable("id") String id) {
+        TaskPatch taskPatch = taskPatchService.findPatchById(id)
+            .orElseThrow(TaskNotFoundException::new);
+        return taskPatchService.undoPatch(taskPatch);
+    }
+
 
 }

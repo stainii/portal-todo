@@ -7,6 +7,7 @@ import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskPatchResult;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
 import be.stijnhooft.portal.todo.repositories.TaskPatchRepository;
+import be.stijnhooft.portal.todo.utils.ObjectUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -17,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
