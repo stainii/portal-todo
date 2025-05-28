@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      username: ''
+      database: embedded_db
+      password: ''
+      port: '0'
+      host: localhost

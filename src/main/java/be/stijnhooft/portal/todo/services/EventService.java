@@ -8,7 +8,6 @@ import be.stijnhooft.portal.todo.mappers.TaskPatchMapper;
 import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +26,6 @@ public class EventService {
     private final TaskPatchService taskPatchService;
     private final TaskPatchMapper taskPatchMapper;
 
-    @Autowired
     public EventService(SubscriptionService subscriptionService, TaskMapper taskMapper, TaskService taskService, TaskPatchService taskPatchService, TaskPatchMapper taskPatchMapper) {
         this.subscriptionService = subscriptionService;
         this.taskService = taskService;

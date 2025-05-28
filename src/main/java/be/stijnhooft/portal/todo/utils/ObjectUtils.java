@@ -28,6 +28,6 @@ public class ObjectUtils {
     }
 
     public static boolean notEqual(Object object1, Object object2) {
-        return org.apache.commons.lang.ObjectUtils.notEqual(object1, object2);
+        return org.apache.commons.lang3.ObjectUtils.notEqual(object1, object2);
     }
 }

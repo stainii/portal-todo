@@ -57,7 +57,7 @@ public class TaskController {
      * So, clients are expected to only patch the changed fields.
      */
     @PatchMapping("/{id}")
-    public TaskPatchResult patch(@RequestBody @Valid TaskPatch taskPatch, @PathVariable("id") String id) {
+    public TaskPatchResult patch(@RequestBody @Valid TaskPatch taskPatch, @PathVariable String id) {
         var task = taskService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Task %s not found.", id)));
 

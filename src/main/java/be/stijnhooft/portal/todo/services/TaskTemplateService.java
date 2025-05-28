@@ -2,7 +2,6 @@ package be.stijnhooft.portal.todo.services;
 
 import be.stijnhooft.portal.todo.model.template.TaskTemplate;
 import be.stijnhooft.portal.todo.repositories.TaskTemplateRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,6 @@ public class TaskTemplateService {
 
     private final TaskTemplateRepository repository;
 
-    @Autowired
     public TaskTemplateService(TaskTemplateRepository repository) {
         this.repository = repository;
     }

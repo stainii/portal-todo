@@ -31,7 +31,7 @@ import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.
 @SuppressWarnings("unchecked")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 public class PublishTaskEventsServiceIntegrationTest {
 
     @Autowired

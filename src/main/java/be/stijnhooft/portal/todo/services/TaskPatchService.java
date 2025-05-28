@@ -9,7 +9,6 @@ import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskPatchResult;
 import be.stijnhooft.portal.todo.repositories.TaskPatchRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +26,6 @@ public class TaskPatchService {
     private final TaskPatchRepository taskPatchRepository;
     private final TaskPatchMapper taskPatchMapper;
 
-    @Autowired
     public TaskPatchService(TaskService taskService, EventPublisher eventPublisher, TaskPatchRepository taskPatchRepository, TaskPatchMapper taskPatchMapper) {
         this.taskService = taskService;
         this.eventPublisher = eventPublisher;

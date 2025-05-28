@@ -4,7 +4,6 @@ import be.stijnhooft.portal.model.domain.Event;
 import be.stijnhooft.portal.todo.events.*;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.support.MessageBuilder;
@@ -21,7 +20,6 @@ public class EventPublisher {
     private final EventTopic eventTopic;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @Autowired
     public EventPublisher(EventTopic eventTopic, ApplicationEventPublisher applicationEventPublisher) {
         this.eventTopic = eventTopic;
         this.applicationEventPublisher = applicationEventPublisher;

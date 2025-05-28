@@ -27,7 +27,7 @@ public class TaskTemplateController {
     }
 
     @PutMapping("/{id}")
-    public TaskTemplate update(@RequestBody TaskTemplate taskTemplate, @PathVariable("id") String id) {
+    public TaskTemplate update(@RequestBody TaskTemplate taskTemplate, @PathVariable String id) {
         if (!id.equals(taskTemplate.getId())) {
             throw new IllegalArgumentException("The id in the url is not the same as the id in the payload.");
         }
@@ -35,7 +35,7 @@ public class TaskTemplateController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") String id) {
+    public void delete(@PathVariable String id) {
         taskTemplateService.delete(id);
     }
 }
