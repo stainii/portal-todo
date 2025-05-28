@@ -1,0 +1,6 @@
+# These needed to be moved to a separate file, to make MongoDB Testcontainers work :(
+spring:
+  data:
+    mongodb:
+      username: portal-todo-db
+      password: test123

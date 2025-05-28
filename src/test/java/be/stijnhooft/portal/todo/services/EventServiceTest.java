@@ -14,7 +14,6 @@ import be.stijnhooft.portal.todo.model.task.TaskStatus;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -28,8 +27,7 @@ import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-public class EventServiceTest {
+public class EventServiceTest extends AbstractSpringBootTest {
 
     @InjectMocks
     private EventService eventService;

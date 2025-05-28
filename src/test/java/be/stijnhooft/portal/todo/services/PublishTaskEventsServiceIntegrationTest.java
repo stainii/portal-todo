@@ -7,10 +7,8 @@ import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.messaging.Message;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,10 +24,7 @@ import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.
 
 /** This is an integration test, firing internal events
  * and checking whether the correct external events are published **/
-@SuppressWarnings("unchecked")
-@SpringBootTest
-@ActiveProfiles("test")
-public class PublishTaskEventsServiceIntegrationTest {
+public class PublishTaskEventsServiceIntegrationTest extends AbstractSpringBootTest {
 
     @Autowired
     private TaskService taskService;
@@ -43,7 +38,6 @@ public class PublishTaskEventsServiceIntegrationTest {
     @Autowired
     private MessageCollector collector;
 
-    @SuppressWarnings("unchecked")
     @Test
     public void onCreate() {
         // arrange

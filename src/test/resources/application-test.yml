@@ -1,9 +1,0 @@
-spring:
-  data:
-    mongodb:
-      username: ''
-      database: embedded_db
-      password: ''
-      port: '0'
-      host: localhost
-  mongodb.embedded.version: 4.2.1

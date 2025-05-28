@@ -11,11 +11,9 @@ spring:
     username: guest
   data:
     mongodb:
-      port: '27017'
+      port: 27017
       host: localhost
-      username: portal-todo-db
       database: todo
-      password: test123
   cloud:
     stream:
       bindings:
