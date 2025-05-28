@@ -2,24 +2,29 @@ package be.stijnhooft.portal.todo.mappers;
 
 import be.stijnhooft.portal.model.domain.Event;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class CancellationEventMapperTest {
 
     @InjectMocks
     private CancellationEventMapper cancellationEventMapper;
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void mapWhenTaskIsNull() {
-        cancellationEventMapper.map(null);
+        assertThrows(NullPointerException.class, () ->
+                cancellationEventMapper.map(null));
     }
 
     @Test

@@ -1,9 +1,10 @@
 package be.stijnhooft.portal.todo.model.task;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TaskStatusTest {
 
@@ -27,9 +28,10 @@ public class TaskStatusTest {
         assertThat(TaskStatus.parse("Completed"), is(TaskStatus.COMPLETED));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void parseWhenWeird() {
-        TaskStatus.parse("weird");
+        assertThrows(IllegalArgumentException.class, () ->
+            TaskStatus.parse("weird"));
     }
 
 }

@@ -11,11 +11,10 @@ import be.stijnhooft.portal.todo.model.subscription.Subscription;
 import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -29,7 +28,7 @@ import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@SpringBootTest
 public class EventServiceTest {
 
     @InjectMocks

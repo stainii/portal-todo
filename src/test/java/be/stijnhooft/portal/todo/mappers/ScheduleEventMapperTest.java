@@ -4,12 +4,13 @@ import be.stijnhooft.portal.model.domain.Event;
 import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.repositories.TaskRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -19,10 +20,12 @@ import java.util.Optional;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class ScheduleEventMapperTest {
 
     @Mock
@@ -32,15 +35,15 @@ public class ScheduleEventMapperTest {
 
     private ScheduleEventMapper scheduleEventMapper;
 
-    @Before
+    @BeforeEach
     public void init() {
-        MockitoAnnotations.initMocks(this);
         scheduleEventMapper = new ScheduleEventMapper(taskRepository, clock);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void mapWhenTaskIsNull() {
-        scheduleEventMapper.map(null);
+        assertThrows(NullPointerException.class, () ->
+                scheduleEventMapper.map(null));
     }
 
     @Test
@@ -109,25 +112,27 @@ public class ScheduleEventMapperTest {
         assertThat(event.getData().get("dueDate"), is("2019-06-07T10:12:13"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void mapWhenInvalidTaskId() {
-        // arrange
-        Task task = new Task();
-        task.setId("120");
-        task.setName("test name");
-        task.setDueDateTime(LocalDateTime.of(2019, 6, 7, 10, 12, 13));
+        assertThrows(IllegalArgumentException.class, () -> {
+            // arrange
+            Task task = new Task();
+            task.setId("120");
+            task.setName("test name");
+            task.setDueDateTime(LocalDateTime.of(2019, 6, 7, 10, 12, 13));
 
-        TaskPatch taskPatch = new TaskPatch();
-        taskPatch.setTaskId("12");
-        taskPatch.addChange("name", "test name");
+            TaskPatch taskPatch = new TaskPatch();
+            taskPatch.setTaskId("12");
+            taskPatch.addChange("name", "test name");
 
-        doReturn(Optional.empty()).when(taskRepository).findById("12");
+            doReturn(Optional.empty()).when(taskRepository).findById("12");
 
-        // act
-        Event event = scheduleEventMapper.map(taskPatch);
+            // act
+            Event event = scheduleEventMapper.map(taskPatch);
 
-        // assert
-        verify(taskRepository).findById("12");
-        verifyNoMoreInteractions(taskRepository);
+            // assert
+            verify(taskRepository).findById("12");
+            verifyNoMoreInteractions(taskRepository);
+        });
     }
 }

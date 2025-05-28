@@ -7,8 +7,8 @@ import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
 import be.stijnhooft.portal.todo.repositories.TaskRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class TaskPatchMapperTest {
@@ -28,7 +28,7 @@ public class TaskPatchMapperTest {
     private TaskPatchMapper taskPatchMapper;
     private TaskRepository taskRepository;
 
-    @Before
+    @BeforeEach
     public void init() {
         taskRepository = mock(TaskRepository.class);
         taskPatchMapper = new TaskPatchMapper(clock, taskRepository);

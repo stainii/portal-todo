@@ -6,3 +6,4 @@ spring:
       password: ''
       port: '0'
       host: localhost
+  mongodb.embedded.version: 4.2.1

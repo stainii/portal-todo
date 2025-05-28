@@ -7,27 +7,27 @@ import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskPatchResult;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
 import be.stijnhooft.portal.todo.repositories.TaskPatchRepository;
-import be.stijnhooft.portal.todo.utils.ObjectUtils;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class TaskPatchServiceTest {
 
     @Mock
@@ -41,9 +41,6 @@ public class TaskPatchServiceTest {
 
     @InjectMocks
     private TaskPatchService taskPatchService;
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void patchATaskThatHasBeenCompletedAndSourceIsUser() {
@@ -457,22 +454,23 @@ public class TaskPatchServiceTest {
 
     @Test
     public void patchWhenTaskDoesNotExist() {
-        expectedException.expect(IllegalArgumentException.class);
+        assertThrows(IllegalArgumentException.class, () -> {
 
-        Task task = new Task();
-        task.setId("10");
+            Task task = new Task();
+            task.setId("10");
 
-        TaskPatch patch = new TaskPatch();
-        patch.setTaskId("10");
-        patch.setDateTime(Instant.now());
-        patch.addChange("status", "OPEN");
-        patch.addChange("dueDateTime", "2019-05-20T11:00:00");
+            TaskPatch patch = new TaskPatch();
+            patch.setTaskId("10");
+            patch.setDateTime(Instant.now());
+            patch.addChange("status", "OPEN");
+            patch.addChange("dueDateTime", "2019-05-20T11:00:00");
 
-        doReturn(Optional.empty()).when(taskService).findById("10");
+            doReturn(Optional.empty()).when(taskService).findById("10");
 
-        taskPatchService.patch(patch, Source.EVENT);
+            taskPatchService.patch(patch, Source.EVENT);
 
-        verify(taskService).findById("10");
-        verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
+            verify(taskService).findById("10");
+            verifyNoMoreInteractions(taskService, taskPatchRepository, eventPublisher);
+        });
     }
 }

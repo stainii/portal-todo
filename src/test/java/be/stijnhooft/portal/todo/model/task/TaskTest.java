@@ -11,9 +11,9 @@ import java.util.Map;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 class TaskTest {
 

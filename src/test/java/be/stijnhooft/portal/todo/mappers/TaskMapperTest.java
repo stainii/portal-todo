@@ -11,8 +11,8 @@ import be.stijnhooft.portal.todo.model.task.TaskStatus;
 import be.stijnhooft.portal.todo.model.template.DeviationBase;
 import be.stijnhooft.portal.todo.model.template.TaskDefinition;
 import be.stijnhooft.portal.todo.model.template.TaskTemplate;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -23,15 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 public class TaskMapperTest {
 
     private TaskMapper taskMapper;
     private Clock clock = Clock.fixed(ZonedDateTime.of(2019, 10, 10, 10, 10, 10, 10, ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
 
-    @Before
+    @BeforeEach
     public void init() {
         taskMapper = new TaskMapper(clock);
     }

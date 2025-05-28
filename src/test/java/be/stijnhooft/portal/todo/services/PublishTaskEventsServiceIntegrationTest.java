@@ -5,14 +5,12 @@ import be.stijnhooft.portal.todo.messaging.EventTopic;
 import be.stijnhooft.portal.todo.model.task.Task;
 import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.messaging.Message;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -22,14 +20,13 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.receivesPayloadThat;
 
 /** This is an integration test, firing internal events
  * and checking whether the correct external events are published **/
 @SuppressWarnings("unchecked")
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class PublishTaskEventsServiceIntegrationTest {

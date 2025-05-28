@@ -1,12 +1,13 @@
 package be.stijnhooft.portal.todo.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 ;
 
@@ -17,9 +18,10 @@ public class StringUtilsTest {
         assertThat(StringUtils.fillInVariables(null, new HashMap<>()), is(Optional.empty()));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void fillInVariablesWhenVariableMapIsNull() {
-        StringUtils.fillInVariables("text", null);
+        assertThrows(NullPointerException.class, () ->
+            StringUtils.fillInVariables("text", null));
     }
 
     @Test

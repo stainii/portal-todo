@@ -9,11 +9,13 @@ import be.stijnhooft.portal.todo.model.task.TaskPatch;
 import be.stijnhooft.portal.todo.model.task.TaskStatus;
 import be.stijnhooft.portal.todo.repositories.TaskPatchRepository;
 import be.stijnhooft.portal.todo.repositories.TaskRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.time.*;
 import java.util.ArrayList;
@@ -26,7 +28,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class TaskServiceTest {
 
     @Mock
@@ -48,7 +51,7 @@ public class TaskServiceTest {
 
     private TaskService taskService;
 
-    @Before
+    @BeforeEach
     public void init() {
         taskService = new TaskService(taskRepository, taskPatchRepository, taskMapper, eventPublisher, taskPatchMapper, clock);
     }
