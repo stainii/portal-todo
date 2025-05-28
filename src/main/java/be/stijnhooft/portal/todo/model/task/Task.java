@@ -10,10 +10,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static be.stijnhooft.portal.todo.PortalTodoApplication.APPLICATION_NAME;
+import static java.util.Objects.requireNonNullElseGet;
 
 @Document
 @Data
@@ -58,11 +62,7 @@ public class Task {
     private List<TaskPatch> history = new ArrayList<>();
 
     public String getFlowId() {
-        if (flowId == null) {
-            return String.format("%s-%s", APPLICATION_NAME, id);
-        } else {
-            return flowId;
-        }
+        return requireNonNullElseGet(flowId, () -> "%s-%s".formatted(APPLICATION_NAME, id));
     }
 
     @SuppressWarnings("Convert2MethodRef")

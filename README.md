@@ -128,6 +128,11 @@ This is configurable in the front-end.
 For example: Housagotchi says that the house should be cleaned within a week. It sends out an event.
 A task is automatically created that should be finished next week.
 
+## Run locally
+To run this project locally:
+- `./portal up todo --dev-back-end` to set up dependencies
+- run the Application class with profile `local` activated
+
 ## Release
 ### How to release
 To release a module, this project makes use of the JGitflow plugin and the Dockerfile-maven-plugin.

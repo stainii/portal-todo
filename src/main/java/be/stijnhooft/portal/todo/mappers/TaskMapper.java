@@ -118,7 +118,7 @@ public class TaskMapper {
                     var expectedDurationInHours = taskDefinition.getExpectedDurationInHours();
                     var importance = taskDefinition.getImportance();
                     var id = UUID.randomUUID().toString();
-                    var flowId = String.format("%s-%s", APPLICATION_NAME, id);
+                    var flowId = "%s-%s".formatted(APPLICATION_NAME, id);
 
                     // assemble task
                     return new Task(id, flowId, name, clock.instant(),

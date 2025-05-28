@@ -35,6 +35,8 @@ public class EventService {
     }
 
     public void receiveEvents(Collection<Event> events) {
+        log.info("Received {} events", events.size());
+        log.debug("{}", events);
         createNewTasks(events);
         completeTasks(events);
     }
@@ -44,7 +46,7 @@ public class EventService {
                 .flatMap(subscriptionService::fireOnCompleteCondition)
                 .map(FiringSubscription::getEvent)
                 .flatMap(event -> taskPatchMapper.mapToTaskPatchThatCompletesATask(event).stream())
-                .collect(Collectors.toList());
+                .toList();
 
         if (taskPatches.isEmpty()) {
             log.info("Received events, but no cancellations were triggered.");

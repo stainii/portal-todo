@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public class DateTimeUtils {
 
+    @SuppressWarnings("SuspiciousDateFormat")
     private static final DateTimeFormatter LOOSE_ISO_DATE_TIME_ZONE_PARSER = DateTimeFormatter.ofPattern(
             "[yyyyMMdd][yyyy-MM-dd][yyyy-DDD]['T'[HHmmss][HHmm][HH:mm:ss][HH:mm][.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]][OOOO][O][z][XXXXX][XXXX]['['VV']']");
 
@@ -37,11 +38,11 @@ public class DateTimeUtils {
         }
 
         TemporalAccessor temporalAccessor = LOOSE_ISO_DATE_TIME_ZONE_PARSER.parseBest(input, ZonedDateTime::from, LocalDateTime::from, LocalDate::from);
-        if (temporalAccessor instanceof ZonedDateTime) {
-            return ((ZonedDateTime) temporalAccessor);
+        if (temporalAccessor instanceof ZonedDateTime time) {
+            return time;
         }
-        if (temporalAccessor instanceof LocalDateTime) {
-            return ((LocalDateTime) temporalAccessor)
+        if (temporalAccessor instanceof LocalDateTime time) {
+            return time
                     .atZone(ZoneId.systemDefault());
         }
         return ((LocalDate) temporalAccessor).atStartOfDay(ZoneId.systemDefault());
