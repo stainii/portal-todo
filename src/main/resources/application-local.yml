@@ -2,5 +2,5 @@
 spring:
   data:
     mongodb:
-      username: portal-todo-db
+      username: portal-todo
       password: test123

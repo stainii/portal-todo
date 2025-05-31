@@ -11,9 +11,9 @@ spring:
     username: guest
   data:
     mongodb:
-      port: 27017
+      port: 27018
       host: localhost
-      database: todo
+      database: portal-todo
   cloud:
     stream:
       bindings:
@@ -49,3 +49,12 @@ server:
     session:
       timeout: 3600s
 timeZone: Europe/Brussels
+
+portal.auth.keycloak-uri: http://localhost:8080
+
+logging:
+  level:
+    org:
+      springframework:
+        integration: DEBUG
+        security: DEBUG

@@ -12,4 +12,5 @@ ENTRYPOINT exec java $JAVA_OPTS_TODO -Djava.security.egd=file:/dev/./urandom -ja
     --spring.cloud.stream.binders.rabbit.environment.spring.rabbitmq.host=${RABBITMQ_HOST} \
     --spring.cloud.stream.binders.rabbit.environment.spring.rabbitmq.port=${RABBITMQ_PORT} \
     --spring.cloud.stream.binders.rabbit.environment.spring.rabbitmq.username=${RABBITMQ_USERNAME} \
-    --spring.cloud.stream.binders.rabbit.environment.spring.rabbitmq.password=${RABBITMQ_PASSWORD}
+    --spring.cloud.stream.binders.rabbit.environment.spring.rabbitmq.password=${RABBITMQ_PASSWORD} \
+    --portal.auth.keycloak-uri=${KEYCLOAK_URI}

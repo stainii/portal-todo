@@ -14,7 +14,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class AbstractSpringBootTest {
 
     @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.2.1")
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.29")
             .withReuse(true)
             .withExposedPorts(27017);
 
